@@ -1,0 +1,14 @@
+{
+  "name": "mentaljs-jsc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mentaljs/mentaljs-jsc.git",
+  "author": "Steve Kite <steve@statecraft.one>",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^3.3.1"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/tsc"
+  }
+}

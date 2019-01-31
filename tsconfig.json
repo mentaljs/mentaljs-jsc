@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es6"],
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": false,
+        "outFile": "build/core.js"
+    },
+    "files": [
+        "packages/mentaljs-jsc/index.ts",
+        "packages/mentaljs-jsc/typings.d.ts"
+    ]
+}

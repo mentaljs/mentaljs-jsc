@@ -40,7 +40,7 @@ class MentalRuntimeV8 : MentalRuntime {
             runtime.add("NativeModules", nativeModules)
 
             jsModules = V8Object(runtime)
-            runtime.add("JSModules", nativeModules)
+            runtime.add("JSModules", jsModules)
 
             for (module in modules) {
                 val v8Object = V8Object(this.runtime)
