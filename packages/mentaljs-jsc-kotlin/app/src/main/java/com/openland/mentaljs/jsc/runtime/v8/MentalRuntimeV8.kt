@@ -16,9 +16,9 @@ import kotlin.reflect.KParameter
 
 class MentalRuntimeV8 : MentalRuntime {
     private var modules = mutableListOf<MentalNativeModule>()
-    private lateinit var runtime: V8
-    private lateinit var nativeModules: V8Object
-    private lateinit var jsModules: V8Object
+    lateinit var runtime: V8
+    lateinit var nativeModules: V8Object
+    lateinit var jsModules: V8Object
     private val thread = HandlerThread("v8")
     override val looper: Looper
     private val handler: Handler

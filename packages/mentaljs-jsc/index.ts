@@ -10,20 +10,26 @@ var setTimeout = function(handler: Function, timeout?: number, ...args: any[]) {
     let id = __handlers.guid++;
     __handlers.pendings[id] = handler
     NativeModules.Timer.setTimeout(id, timeout || 0)
+    return id
 }
 
 var setInterval = function(handler: Function, timeout?: number, ...args: any[]) {
     let id = __handlers.guid++;
     __handlers.pendings[id] = handler
     NativeModules.Timer.setInterval(id, timeout || 0)
+    return id
 }
 
 var clearTimeout = function(handle?:number) {
-    NativeModules.Timer.clearTimeout(handle)
+    if (handle !== undefined && handle !== null) {
+        NativeModules.Timer.clearTimeout(handle)
+    }
 }
 
 var clearInterval = function(handle?:number) {
-    NativeModules.Timer.clearTimeout(handle)
+    if (handle !== undefined && handle !== null) {
+        NativeModules.Timer.clearTimeout(handle)
+    }
 }
 
 JSModules.JSTimer = {
