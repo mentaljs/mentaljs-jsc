@@ -6,9 +6,21 @@
   "author": "Steve Kite <steve@statecraft.one>",
   "license": "MIT",
   "dependencies": {
-    "typescript": "^3.3.1"
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.1.0",
+    "babel-loader": "^8.0.5",
+    "symbol-es6": "^0.1.2",
+    "typescript": "^3.3.1",
+    "webpack": "^4.29.0"
   },
   "scripts": {
-    "build": "./node_modules/.bin/tsc & cp ./build/console.js ./packages/mentaljs-jsc-kotlin/app/src/main/assets/console.js & cp ./build/timer.js ./packages/mentaljs-jsc-kotlin/app/src/main/assets/timer.js"
+    "build:polyfills": "yarn webpack --config ./packages/mentaljs-jsc/webpack.config.js && cp ./build/polyfills.js ./packages/mentaljs-jsc-kotlin/app/src/main/assets/polyfills.js",
+    "build": "yarn webpack --config ./packages/mentaljs-jsc-sandbox/webpack.config.js && cp ./build/index.js ./packages/mentaljs-jsc-kotlin/app/src/main/assets/index.js"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.2.1"
   }
 }

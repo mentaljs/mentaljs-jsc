@@ -1,16 +1,21 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "lib": ["es6"],
+        "module": "commonjs",
+        "lib": ["es6", "dom"],
         "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "outDir": "build"
+        "outDir": "build",
+        "jsx": "react"
     },
+    "include": [
+        "packages/mentaljs-jsc/*.ts",
+        "packages/mentaljs-jsc-core/*.ts",
+        "packages/mentaljs-jsc-sandbox/*.ts"
+    ],
     "files": [
-        "packages/mentaljs-jsc/timer.ts",
-        "packages/mentaljs-jsc/console.ts",
-        "packages/mentaljs-jsc/typings.d.ts"
+        "./packages/mentaljs-jsc-core/typings.d.ts"
     ]
 }

@@ -15,7 +15,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 
 class MentalRuntimeV8 : MentalRuntime {
+
     private var modules = mutableListOf<MentalNativeModule>()
+    private var modulesMap = mutableMapOf<KClass<*>, MentalNativeModule>()
     lateinit var runtime: V8
     lateinit var nativeModules: V8Object
     lateinit var jsModules: V8Object
@@ -35,7 +37,7 @@ class MentalRuntimeV8 : MentalRuntime {
 
     fun start() {
         this.handler.post {
-            runtime = V8.createV8Runtime()
+            runtime = V8.createV8Runtime("global")
             nativeModules = V8Object(runtime)
             runtime.add("NativeModules", nativeModules)
 
@@ -71,8 +73,13 @@ class MentalRuntimeV8 : MentalRuntime {
         } as T
     }
 
+    override fun <T : MentalNativeModule> getNativeModule(clazz: KClass<T>): T {
+        return this.modulesMap[clazz] as T
+    }
+
     override fun registerNativeModule(module: MentalNativeModule) {
         this.modules.add(module)
+        this.modulesMap[module.javaClass.kotlin] = module
     }
 
     override fun start(source: String) {

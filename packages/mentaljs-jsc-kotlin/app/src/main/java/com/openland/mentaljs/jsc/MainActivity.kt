@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private val timer = TimerModule()
     private val eventEmitter = EventEmitterModule()
     private val benchmark = BindingBenchmarkModule()
+    private val sandbox = SandboxModule()
 
     private fun empty() {
 
@@ -37,24 +38,12 @@ class MainActivity : AppCompatActivity() {
         runtime.registerNativeModule(timer)
         runtime.registerNativeModule(eventEmitter)
         runtime.registerNativeModule(benchmark)
+        runtime.registerNativeModule(sandbox)
         runtime.start()
-
-        val script = """
-            var console = {
-                log: NativeModules.Console.log,
-            }
-            // var start = Date.now();
-
-
-            // console.log('Benchmark 1: ' + (Date.now() - start) + ' ms');
-            // NativeModules.Console.log('Start' + Date.now());
-            // setTimeout(function () { NativeModules.Console.log('hello!' + Date.now()); }, 10);
-            // var count = 0
-            // var d = setInterval(function () { console.log('hello'); count++; if (count > 10) { clearTimeout(d); } }, 1000);
-        """.trimIndent()
-        runtime.start(loadData("timer.js"))
-        runtime.start(loadData("console.js"))
-        runtime.start("console.log('hello', undefined, null)")
+        runtime.start(loadData("polyfills.js"))
+        runtime.start(loadData("index.js"))
+        // runtime.start(loadData("console.js"))
+        // runtime.start("console.log('hello', undefined, null)")
         // runtime.start(script)
         // runtime.start(loadData("setTimeoutBenchmark.js"))
         // runtime.start(loadData("bindingBenchmark.js"))

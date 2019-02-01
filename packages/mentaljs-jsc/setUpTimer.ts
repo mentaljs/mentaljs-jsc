@@ -6,27 +6,27 @@ const __handlers = {
     pendings: [] as any
 };
 
-var setTimeout = function(handler: Function, timeout?: number, ...args: any[]) {
+global.setTimeout = function(handler: Function, timeout?: number, ...args: any[]) {
     let id = __handlers.guid++;
     __handlers.pendings[id] = handler
     NativeModules.Timer.setTimeout(id, timeout || 0)
     return id
 }
 
-var setInterval = function(handler: Function, timeout?: number, ...args: any[]) {
+global.setInterval = function(handler: Function, timeout?: number, ...args: any[]) {
     let id = __handlers.guid++;
     __handlers.pendings[id] = handler
     NativeModules.Timer.setInterval(id, timeout || 0)
     return id
 }
 
-var clearTimeout = function(handle?:number) {
+global.clearTimeout = function(handle?:number) {
     if (handle !== undefined && handle !== null) {
         NativeModules.Timer.clearTimeout(handle)
     }
 }
 
-var clearInterval = function(handle?:number) {
+global.clearInterval = function(handle?:number) {
     if (handle !== undefined && handle !== null) {
         NativeModules.Timer.clearTimeout(handle)
     }
@@ -38,6 +38,5 @@ JSModules.JSTimer = {
             let p = __handlers.pendings[i]
             p()
         }
-        // NativeModules.Console.log('hello!' + Date.now());
     }
 }
