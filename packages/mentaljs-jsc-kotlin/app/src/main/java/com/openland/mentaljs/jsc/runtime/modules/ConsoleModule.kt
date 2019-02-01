@@ -15,4 +15,14 @@ class ConsoleModule : MentalNativeModule("Console") {
     fun debug(msg: String) {
         Log.d("MentalJS", msg)
     }
+
+    @MentalMethod
+    fun error(msg: String) {
+        Log.e("MentalJS", msg)
+    }
+
+    @MentalMethod
+    fun warn(msg: String) {
+        Log.w("MentalJS", msg)
+    }
 }

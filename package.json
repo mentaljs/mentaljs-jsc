@@ -9,6 +9,6 @@
     "typescript": "^3.3.1"
   },
   "scripts": {
-    "build": "./node_modules/.bin/tsc"
+    "build": "./node_modules/.bin/tsc & cp ./build/console.js ./packages/mentaljs-jsc-kotlin/app/src/main/assets/console.js & cp ./build/timer.js ./packages/mentaljs-jsc-kotlin/app/src/main/assets/timer.js"
   }
 }

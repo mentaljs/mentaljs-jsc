@@ -2,14 +2,15 @@
     "compilerOptions": {
         "target": "es5",
         "lib": ["es6"],
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "outFile": "build/core.js"
+        "outDir": "build"
     },
     "files": [
-        "packages/mentaljs-jsc/index.ts",
+        "packages/mentaljs-jsc/timer.ts",
+        "packages/mentaljs-jsc/console.ts",
         "packages/mentaljs-jsc/typings.d.ts"
     ]
 }
