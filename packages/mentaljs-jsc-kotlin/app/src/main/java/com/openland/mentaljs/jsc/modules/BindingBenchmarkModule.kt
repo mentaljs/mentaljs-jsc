@@ -1,10 +1,7 @@
-package com.openland.mentaljs.jsc.runtime.modules
+package com.openland.mentaljs.jsc.modules
 
 import com.eclipsesource.v8.V8Object
-import com.openland.mentaljs.jsc.runtime.MentalMethod
-import com.openland.mentaljs.jsc.runtime.MentalNativeModule
-import com.openland.mentaljs.jsc.runtime.MentalRuntime
-import com.openland.mentaljs.jsc.runtime.v8.MentalRuntimeV8
+import com.openland.open.engine.MentalRuntimeV8
 
 class BindingBenchmarkModule : MentalNativeModule("BindingBenchmarking") {
     override fun initialize(runtime: MentalRuntime) {

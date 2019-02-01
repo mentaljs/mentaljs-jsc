@@ -1,4 +1,4 @@
-package com.openland.mentaljs.jsc.runtime.v8
+package com.openland.open.engine
 
 import android.os.Handler
 import android.os.HandlerThread
@@ -6,10 +6,10 @@ import android.os.Looper
 import com.eclipsesource.v8.V8
 import com.eclipsesource.v8.V8Object
 import com.eclipsesource.v8.utils.V8ObjectUtils
-import com.openland.mentaljs.jsc.runtime.MentalJSModule
-import com.openland.mentaljs.jsc.runtime.MentalMethod
-import com.openland.mentaljs.jsc.runtime.MentalNativeModule
-import com.openland.mentaljs.jsc.runtime.MentalRuntime
+import com.openland.mentaljs.jsc.modules.MentalJSModule
+import com.openland.mentaljs.jsc.modules.MentalMethod
+import com.openland.mentaljs.jsc.modules.MentalNativeModule
+import com.openland.mentaljs.jsc.modules.MentalRuntime
 import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
@@ -35,7 +35,7 @@ class MentalRuntimeV8 : MentalRuntime {
         this.handler = Handler(looper)
     }
 
-    fun start() {
+    override fun start() {
         this.handler.post {
             runtime = V8.createV8Runtime("global")
             nativeModules = V8Object(runtime)

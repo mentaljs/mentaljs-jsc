@@ -13,9 +13,11 @@
     "include": [
         "packages/mentaljs-jsc/*.ts",
         "packages/mentaljs-jsc-core/*.ts",
-        "packages/mentaljs-jsc-sandbox/*.ts"
+        "packages/mentaljs-jsc-sandbox/*.ts",
+        "packages/mentaljs-jsc-view/*.ts"
     ],
     "files": [
-        "./packages/mentaljs-jsc-core/typings.d.ts"
+        "./packages/mentaljs-jsc-core/typings.d.ts",
+        "./packages/mentaljs-jsc-view/typings.d.ts"
     ]
 }

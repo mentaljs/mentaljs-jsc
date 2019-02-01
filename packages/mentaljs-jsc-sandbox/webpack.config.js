@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     mode: "production",
-    entry: './packages/mentaljs-jsc-sandbox/index.ts',
+    entry: './packages/mentaljs-jsc-sandbox/index.tsx',
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, '../../build')

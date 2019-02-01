@@ -1,6 +1,8 @@
-package com.openland.mentaljs.jsc.runtime
+package com.openland.open
 
-import com.openland.mentaljs.jsc.runtime.modules.EventEmitterModule
+import com.openland.mentaljs.jsc.modules.MentalRuntime
+import com.openland.mentaljs.jsc.modules.getNativeModule
+import com.openland.open.modules.EventEmitterModule
 
 class EventEmitter(val name: String, private val runtime: MentalRuntime) {
     private val module by lazy { runtime.getNativeModule<EventEmitterModule>() }

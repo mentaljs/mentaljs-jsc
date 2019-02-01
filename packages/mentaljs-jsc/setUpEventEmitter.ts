@@ -2,16 +2,14 @@
 let subscriptions = new Map<string, Map<string, ((args?: any) => void)[]>>()
 
 JSModules.EventEmitterJS = {
-    postMessage: (name: string, event: string, args?: any) => {
-        console.log('post received: ' + name + ': ' + event);
+    postMessage: (name: string, event: string, args: string) => {
         let s = subscriptions.get(name);
         if (s) {
-            console.log('found item');
             let e = s.get(event);
             if (e && e.length > 0) {
-                console.log('found item2');
+                let jargs = JSON.parse(args);
                 for (let c of e) {
-                    c(args)
+                    c(jargs)
                 }
             }
         }

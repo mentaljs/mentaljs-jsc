@@ -1,0 +1,1 @@
+export { createView } from './internals/createView';

@@ -1,9 +1,6 @@
-package com.openland.mentaljs.jsc
+package com.openland.mentaljs.jsc.modules
 
-import com.openland.mentaljs.jsc.runtime.EventEmitter
-import com.openland.mentaljs.jsc.runtime.MentalMethod
-import com.openland.mentaljs.jsc.runtime.MentalNativeModule
-import com.openland.mentaljs.jsc.runtime.MentalRuntime
+import com.openland.open.EventEmitter
 
 class SandboxModule : MentalNativeModule("SandboxModule") {
 

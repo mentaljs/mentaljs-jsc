@@ -1,4 +1,4 @@
-package com.openland.mentaljs.jsc.runtime
+package com.openland.mentaljs.jsc.modules
 
 import android.os.Looper
 import kotlin.reflect.KClass
@@ -15,6 +15,7 @@ interface MentalRuntime {
     fun <T : MentalJSModule> getJsModule(clazz: KClass<T>): T
     fun <T : MentalNativeModule> getNativeModule(clazz: KClass<T>): T
 
+    fun start()
     fun start(source: String)
     fun destroy()
 }
