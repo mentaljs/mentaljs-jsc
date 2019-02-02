@@ -15,7 +15,7 @@ object RootViewSpec {
         val res = Column.create(context)
         res.widthPercent(100.0f)
         res.heightPercent(100.0f)
-        res.child(ViewResolver.resolveView(context, spec.type, spec.props, spec.children, runtime))
+        res.child(ViewResolver.resolveView(context, spec.type, spec.props, spec.children.toTypedArray(), runtime))
         return res.build()
     }
 }

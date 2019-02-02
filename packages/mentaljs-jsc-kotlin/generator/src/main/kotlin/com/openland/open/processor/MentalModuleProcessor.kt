@@ -1,5 +1,7 @@
 package com.openland.open.processor
 
+import com.fasterxml.jackson.core.TreeNode
+import com.fasterxml.jackson.jr.stree.JrsNumber
 import com.google.auto.service.AutoService
 import com.openland.open.*
 import com.squareup.kotlinpoet.*
@@ -17,7 +19,7 @@ import javax.lang.model.type.TypeKind
 class MentalModuleProcessor : AbstractProcessor() {
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(MentalModule::class.java.name)
+        return mutableSetOf(MentalModule::class.java.name, MentalProps::class.java.name)
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
@@ -32,7 +34,7 @@ class MentalModuleProcessor : AbstractProcessor() {
             val name = it.simpleName.toString()
             val rname = name + "_Descriptor"
 
-            val fileBuilder = FileSpec.builder(pack, "$rname.kt")
+            val fileBuilder = FileSpec.builder(pack, "$rname")
                     .addStaticImport("com.openland.open", "ModuleMethodInvoker")
             val typeSpecBuilder = TypeSpec.objectBuilder(rname)
                     .superclass(ModuleDescriptor::class.java)
@@ -88,6 +90,52 @@ class MentalModuleProcessor : AbstractProcessor() {
             file.writeTo(File(path))
         }
 
+        roundEnv.getElementsAnnotatedWith(MentalProps::class.java).forEach {
+            val pack = processingEnv.elementUtils.getPackageOf(it).toString()
+            val name = it.simpleName.toString()
+            val rname = name + "_Serializer"
+            val fileBuilder = FileSpec.builder(pack, "$rname")
+                    .addStaticImport(pack, name)
+                    .addStaticImport("com.fasterxml.jackson.jr.stree", "*")
+
+            val typeSpecBuilder = TypeSpec.objectBuilder(rname)
+                    .superclass(Serializer::class)
+
+            var body = "val res = $name()\n"
+
+            for (e in it.enclosedElements) {
+
+                if (e.kind == ElementKind.FIELD) {
+                    body += "val _" + e.simpleName.toString() + " = source.get(\"${e.simpleName}\")\n"
+                    body += "if (_" + e.simpleName.toString() + " != null) {\n"
+                    if (e.asType().toString() == "java.lang.String") {
+                        body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + "as JrsString).value;\n"
+                    } else if (e.asType().toString() == "java.lang.Integer") {
+                        body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + "as JrsNumber).value.toInt();\n"
+                    } else if (e.asType().toString() == "java.lang.Float" || e.asType().toString() == "float") {
+                        body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsNumber).value.toFloat();\n"
+                    } else {
+                        throw Error("Unsupported type: " + e.asType())
+                    }
+                    body += "}\n"
+                }
+                // body += e.simpleName.toString() + ": " + e.kind + "\n"
+            }
+
+            body += "return res\n"
+
+            typeSpecBuilder.addFunction(FunSpec.builder("parse")
+                    .addModifiers(KModifier.OVERRIDE)
+                    .addParameter("source", TreeNode::class)
+                    .returns(Any::class)
+                    .addCode(body)
+                    .build())
+
+            val file = fileBuilder
+                    .addType(typeSpecBuilder.build())
+                    .build()
+            file.writeTo(File(path))
+        }
 
         return true
     }

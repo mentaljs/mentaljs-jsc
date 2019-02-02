@@ -7,9 +7,12 @@ import com.facebook.litho.Row
 import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.Prop
+import com.openland.open.MentalProps
 import com.openland.open.MentalRuntime
+import kotlinx.serialization.Serializable
 
-class XViewProps : ViewProps() {
+@MentalProps
+class XViewProps {
     var width: Float? = null
     var height: Float? = null
     var maxWidth: Float? = null
@@ -22,10 +25,6 @@ class XViewProps : ViewProps() {
     var marginTop: Float? = null
     var marginLeft: Float? = null
     var marginRight: Float? = null
-
-    // var backgroundColor: Int? = null
-    // var borderRadius: Float? = null
-    // var backgroundPatch: AsyncPatch? = null
 }
 
 @LayoutSpec
@@ -44,7 +43,7 @@ object XViewSpec {
         res.backgroundColor(Color.RED)
 
         for (c in children) {
-            res.child(ViewResolver.resolveView(context, c.type, c.props, c.children, runtime))
+            res.child(ViewResolver.resolveView(context, c.type, c.props, c.children.toTypedArray(), runtime))
         }
 
         return res.build()

@@ -2,8 +2,12 @@ package com.openland.open.modules
 
 import android.util.Log
 import com.beust.klaxon.Klaxon
+import com.fasterxml.jackson.core.TreeNode
 import com.openland.open.*
 import com.openland.open.view.*
+import org.json.JSONObject
+import com.fasterxml.jackson.jr.ob.JSON
+import com.fasterxml.jackson.jr.stree.JacksonJrsTreeCodec
 
 class AttachRootEvent(val id: Int, val name: String)
 class DetachRootEvent(val id: Int)
@@ -40,6 +44,7 @@ class UIManager : MentalNativeModule("UIManager") {
     }
 
     fun attachRootView(name: String, view: OpenRootView): Int {
+        Log.d("UIManager", "Attach root view")
         val id = this.nextRootId++
         this.views[id] = view
         if (!this.inited) {
@@ -57,23 +62,18 @@ class UIManager : MentalNativeModule("UIManager") {
 
     @MentalMethod
     fun initView(id: Int, spec: String) {
-        runtime.runOnWorkerThread {
-            Log.d("UIManager", "View inited")
-            Log.d("UIManager", spec)
-            val specValue = Klaxon().parse<ViewSpec>(spec)!!
-            val view = this.views[id]
-            Log.d("UIManager", "Parsed")
-            view?.setConfig(specValue)
-        }
+        Log.d("UIManager", "View inited")
+        val view = this.views[id]
+        val start = System.currentTimeMillis()
+        val s = ViewResolver.parseViewSpec(spec)
+        Log.d("UIManager", "View ${System.currentTimeMillis() - start} ms")
+        view?.setConfig(s)
     }
 
     @MentalMethod
     fun updateView(id: Int, spec: String) {
-        runtime.runOnWorkerThread {
-            Log.d("UIManager", "View updated")
-            val specValue = Klaxon().parse<ViewSpec>(spec)!!
-            val view = this.views[id]
-            view?.setConfig(specValue)
-        }
+        Log.d("UIManager", "View updated")
+        val view = this.views[id]
+        view?.setConfig(ViewResolver.parseViewSpec(spec))
     }
 }

@@ -1,5 +1,7 @@
 package com.openland.open
 
+import com.fasterxml.jackson.core.TreeNode
+
 sealed class MethodArgument {
     class NullArgument() : MethodArgument()
     class UndefinedArgument() : MethodArgument()
@@ -10,6 +12,10 @@ sealed class MethodArgument {
 
 abstract class ModuleMethodInvoker {
     abstract fun invoke(source: Any, arguments: Array<MethodArgument>)
+}
+
+abstract class Serializer {
+    abstract fun parse(source: TreeNode): Any
 }
 
 abstract class ModuleDescriptor {

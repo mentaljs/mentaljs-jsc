@@ -724,9 +724,9 @@ var ViewRenderInstance_ViewRenderInstance = function ViewRenderInstance(id, Comp
   ViewRenderInstance_defineProperty(this, "renderer", void 0);
 
   this.renderer = new AsyncRenderer(function (state) {
-    ViewRenderInstance_native.initView(id, JSON.stringify(state));
+    ViewRenderInstance_native.updateView(id, JSON.stringify(state));
   }, react["createElement"](Component, null));
-  ViewRenderInstance_native.updateView(id, JSON.stringify(this.renderer.getState()));
+  ViewRenderInstance_native.initView(id, JSON.stringify(this.renderer.getState()));
 };
 // CONCATENATED MODULE: ./packages/mentaljs-jsc-view/AppRegistry.ts
 function AppRegistry_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }

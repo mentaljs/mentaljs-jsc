@@ -8,8 +8,8 @@ export class ViewRenderInstance {
     readonly renderer: AsyncRenderer;
     constructor(id: number, Component: React.ComponentType<{}>) {
         this.renderer = new AsyncRenderer((state) => {
-            native.initView(id, JSON.stringify(state));
+            native.updateView(id, JSON.stringify(state));
         }, <Component />);
-        native.updateView(id, JSON.stringify(this.renderer.getState()));
+        native.initView(id, JSON.stringify(this.renderer.getState()));
     }
 }

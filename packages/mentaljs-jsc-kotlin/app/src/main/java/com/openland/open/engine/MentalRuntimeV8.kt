@@ -3,6 +3,7 @@ package com.openland.open.engine
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.util.Log
 import com.eclipsesource.v8.JavaVoidCallback
 import com.eclipsesource.v8.V8
 import com.eclipsesource.v8.V8Object
@@ -40,6 +41,7 @@ class MentalRuntimeV8 : MentalRuntime {
 
     override fun start() {
         this.handler.post {
+            var start = System.currentTimeMillis()
             runtime = V8.createV8Runtime("global")
             nativeModules = V8Object(runtime)
             runtime.add("NativeModules", nativeModules)
@@ -47,11 +49,17 @@ class MentalRuntimeV8 : MentalRuntime {
             jsModules = V8Object(runtime)
             runtime.add("JSModules", jsModules)
 
+            Log.d("MentalRuntime", "Engine start time: ${System.currentTimeMillis() - start} ms")
+            start = System.currentTimeMillis()
+
             for (module in modules) {
+                start = System.currentTimeMillis()
                 val descriptor = Class
                         .forName(module::class.java.name + "_Descriptor")
                         .kotlin
                         .objectInstance as ModuleDescriptor
+                Log.d("MentalRuntime", "${module.name} prep time: ${System.currentTimeMillis() - start} ms")
+                start = System.currentTimeMillis()
                 val v8Object = V8Object(this.runtime)
                 for (m in descriptor.getModuleMethods()) {
                     v8Object.registerJavaMethod({ src, args ->
@@ -80,19 +88,30 @@ class MentalRuntimeV8 : MentalRuntime {
 //                    v8Object.registerJavaMethod(module, it.name, name, it.parameters.filter { it.kind === KParameter.Kind.VALUE }.map { (it.type.classifier!! as KClass<*>).java }.toTypedArray())
 //                }
                 nativeModules.add(module.name, v8Object)
+
+                Log.d("MentalRuntime", "${module.name} start time: ${System.currentTimeMillis() - start} ms")
+                start = System.currentTimeMillis()
             }
+
+            // Log.d("MentalRuntime", "Modules registration time: ${System.currentTimeMillis() - start} ms")
+            // start = System.currentTimeMillis()
 
             for (module in modules) {
                 module.initialize(this)
             }
+
+            Log.d("MentalRuntime", "Modules init time: ${System.currentTimeMillis() - start} ms")
+            // start = System.currentTimeMillis()
         }
     }
 
     override fun started() {
         this.handler.post {
+            val start = System.currentTimeMillis()
             for (module in modules) {
                 module.started(this)
             }
+            Log.d("MentalRuntime", "Modules start completed: ${System.currentTimeMillis() - start} ms")
         }
     }
 
@@ -128,7 +147,9 @@ class MentalRuntimeV8 : MentalRuntime {
 
     override fun start(source: String) {
         this.handler.post {
+            val start = System.currentTimeMillis()
             this.runtime.executeVoidScript(source)
+            Log.d("MentalRuntime", "Script time: ${System.currentTimeMillis() - start} ms")
         }
     }
 
