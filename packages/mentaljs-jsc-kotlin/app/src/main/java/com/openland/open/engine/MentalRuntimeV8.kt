@@ -21,18 +21,22 @@ class MentalRuntimeV8 : MentalRuntime {
     lateinit var runtime: V8
     lateinit var nativeModules: V8Object
     lateinit var jsModules: V8Object
-    private val thread = HandlerThread("v8")
+    private val thread = HandlerThread("v8-runner")
+    private val workerThread = HandlerThread("v8-worker")
     override val looper: Looper
     private val handler: Handler
+    private val workerHandler: Handler
 
 
     init {
         thread.start()
-        while (thread.looper == null) {
+        workerThread.start()
+        while (thread.looper == null || workerThread.looper == null) {
             Thread.sleep(1)
         }
         looper = thread.looper
         this.handler = Handler(looper)
+        this.workerHandler = Handler(workerThread.looper)
     }
 
     override fun start() {
@@ -73,6 +77,10 @@ class MentalRuntimeV8 : MentalRuntime {
 
     override fun runOnJsThread(callback: () -> Unit) {
         this.handler.post(callback)
+    }
+
+    override fun runOnWorkerThread(callback: () -> Unit) {
+        this.workerHandler.post(callback)
     }
 
     override fun <T : MentalJSModule> getJsModule(clazz: KClass<T>): T {

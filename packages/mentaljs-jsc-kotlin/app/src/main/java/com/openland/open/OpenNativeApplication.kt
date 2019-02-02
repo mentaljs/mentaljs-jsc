@@ -1,6 +1,7 @@
 package com.openland.open
 
 import android.app.Application
+import com.facebook.soloader.SoLoader
 import com.openland.open.modules.ConsoleModule
 import com.openland.open.modules.EventEmitterModule
 import com.openland.open.modules.TimerModule
@@ -14,6 +15,8 @@ abstract class OpenNativeApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        SoLoader.init(this, false)
+
         this.runtime = MentalRuntimeV8()
 
         // Load Modules

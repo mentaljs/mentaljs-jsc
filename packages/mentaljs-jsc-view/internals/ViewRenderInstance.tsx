@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { AsyncRenderer } from './ReactNativeRenderer';
+import { getNativeModule } from '../../mentaljs-jsc-core/getNativeModule';
+
+const native = getNativeModule<{ initView: (id: number, spec: string) => void, updateView: (id: number, spec: string) => void }>('UIManager');
 
 export class ViewRenderInstance {
     readonly renderer: AsyncRenderer;
     constructor(id: number, Component: React.ComponentType<{}>) {
         this.renderer = new AsyncRenderer((state) => {
-            console.log(state);
+            native.initView(id, JSON.stringify(state));
         }, <Component />);
-        console.log(this.renderer.getState());
+        native.updateView(id, JSON.stringify(this.renderer.getState()));
     }
 }

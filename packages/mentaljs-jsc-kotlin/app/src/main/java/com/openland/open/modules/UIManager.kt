@@ -1,10 +1,12 @@
 package com.openland.open.modules
 
+import android.util.Log
+import com.beust.klaxon.Klaxon
 import com.openland.open.MentalMethod
 import com.openland.open.MentalNativeModule
 import com.openland.open.MentalRuntime
 import com.openland.open.EventEmitter
-import com.openland.open.view.OpenRootView
+import com.openland.open.view.*
 
 class AttachRootEvent(val id: Int, val name: String)
 class DetachRootEvent(val id: Int)
@@ -16,6 +18,20 @@ class UIManager : MentalNativeModule("UIManager") {
     private var nextRootId: Int = 1
     private var views = mutableMapOf<Int, OpenRootView>()
     private var pending = arrayListOf<AttachRootEvent>()
+    private lateinit var runtime: MentalRuntime;
+
+    override fun initialize(runtime: MentalRuntime) {
+        this.runtime = runtime
+
+        ViewResolver.registerView("XView", XViewProps::class) { ctx, props, children, runtime ->
+            XView.create(ctx)
+                    .spec(props as XViewProps)
+                    .children(children)
+                    .runtime(runtime)
+                    .build()
+
+        }
+    }
 
     override fun started(runtime: MentalRuntime) {
         this.eventEmitter = EventEmitter("AppRegistry", runtime)
@@ -43,11 +59,23 @@ class UIManager : MentalNativeModule("UIManager") {
 
     @MentalMethod
     fun initView(id: Int, spec: String) {
-
+        runtime.runOnWorkerThread {
+            Log.d("UIManager", "View inited")
+            Log.d("UIManager", spec)
+            val specValue = Klaxon().parse<ViewSpec>(spec)!!
+            val view = this.views[id]
+            Log.d("UIManager", "Parsed")
+            view?.setConfig(specValue)
+        }
     }
 
     @MentalMethod
     fun updateView(id: Int, spec: String) {
-
+        runtime.runOnWorkerThread {
+            Log.d("UIManager", "View updated")
+            val specValue = Klaxon().parse<ViewSpec>(spec)!!
+            val view = this.views[id]
+            view?.setConfig(specValue)
+        }
     }
 }

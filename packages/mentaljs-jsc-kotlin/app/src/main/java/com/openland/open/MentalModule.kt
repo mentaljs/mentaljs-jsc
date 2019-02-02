@@ -19,6 +19,7 @@ interface MentalRuntime {
     fun start(source: String)
     fun started()
     fun runOnJsThread(callback: () -> Unit)
+    fun runOnWorkerThread(callback: () -> Unit)
     fun destroy()
 }
 
