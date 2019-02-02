@@ -1,7 +1,7 @@
 package com.openland.open.modules
 
 import android.os.Handler
-import com.openland.mentaljs.jsc.modules.*
+import com.openland.open.*
 
 interface JSTimer : MentalJSModule {
     fun runCallbacks(ids: List<Int>)

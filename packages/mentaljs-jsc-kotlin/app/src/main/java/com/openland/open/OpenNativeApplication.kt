@@ -1,9 +1,6 @@
 package com.openland.open
 
 import android.app.Application
-import com.facebook.soloader.SoLoader
-import com.openland.mentaljs.jsc.modules.MentalNativeModule
-import com.openland.mentaljs.jsc.modules.MentalRuntime
 import com.openland.open.modules.ConsoleModule
 import com.openland.open.modules.EventEmitterModule
 import com.openland.open.modules.TimerModule
@@ -17,8 +14,6 @@ abstract class OpenNativeApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-//        SoLoader.init(this, false)
-//        SoLoader.loadLibrary("j2v8")
         this.runtime = MentalRuntimeV8()
 
         // Load Modules
@@ -34,6 +29,7 @@ abstract class OpenNativeApplication : Application() {
         this.runtime.start()
         this.runtime.start(loadData("polyfills.js"))
         this.runtime.start(loadData("index.js"))
+        this.runtime.started()
     }
 
     abstract fun getModules(): Collection<MentalNativeModule>

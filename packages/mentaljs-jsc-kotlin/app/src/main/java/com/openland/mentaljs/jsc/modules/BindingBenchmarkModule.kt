@@ -1,6 +1,9 @@
 package com.openland.mentaljs.jsc.modules
 
 import com.eclipsesource.v8.V8Object
+import com.openland.open.MentalMethod
+import com.openland.open.MentalNativeModule
+import com.openland.open.MentalRuntime
 import com.openland.open.engine.MentalRuntimeV8
 
 class BindingBenchmarkModule : MentalNativeModule("BindingBenchmarking") {

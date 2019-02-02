@@ -1,7 +1,5 @@
 package com.openland.open
 
-import com.openland.mentaljs.jsc.modules.MentalRuntime
-import com.openland.mentaljs.jsc.modules.getNativeModule
 import com.openland.open.modules.EventEmitterModule
 
 class EventEmitter(val name: String, private val runtime: MentalRuntime) {

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Reconciler from 'react-reconciler';
 
 var tagIndex = 0;

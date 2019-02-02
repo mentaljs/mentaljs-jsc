@@ -1,4 +1,4 @@
-package com.openland.mentaljs.jsc.modules
+package com.openland.open
 
 import android.os.Looper
 import kotlin.reflect.KClass
@@ -17,6 +17,8 @@ interface MentalRuntime {
 
     fun start()
     fun start(source: String)
+    fun started()
+    fun runOnJsThread(callback: () -> Unit)
     fun destroy()
 }
 
@@ -32,6 +34,10 @@ annotation class MentalMethod(val name: String = "")
 
 abstract class MentalNativeModule(val name: String) {
     open fun initialize(runtime: MentalRuntime) {
+
+    }
+
+    open fun started(runtime: MentalRuntime) {
 
     }
 }

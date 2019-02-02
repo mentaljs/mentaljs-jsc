@@ -1,10 +1,10 @@
 package com.openland.open.modules
 
 import com.beust.klaxon.Klaxon
-import com.openland.mentaljs.jsc.modules.MentalJSModule
-import com.openland.mentaljs.jsc.modules.MentalNativeModule
-import com.openland.mentaljs.jsc.modules.MentalRuntime
-import com.openland.mentaljs.jsc.modules.getJsModule
+import com.openland.open.MentalJSModule
+import com.openland.open.MentalNativeModule
+import com.openland.open.MentalRuntime
+import com.openland.open.getJsModule
 
 interface EventEmitterJS : MentalJSModule {
     fun postMessage(name: String, event: String, args: String)
@@ -13,12 +13,16 @@ interface EventEmitterJS : MentalJSModule {
 class EventEmitterModule : MentalNativeModule("EventEmitter") {
 
     private lateinit var emitter: EventEmitterJS
+    private lateinit var runtime: MentalRuntime
 
     override fun initialize(runtime: MentalRuntime) {
         this.emitter = runtime.getJsModule()
+        this.runtime = runtime
     }
 
     fun postMessage(name: String, event: String, args: Any?) {
-        emitter.postMessage(name, event, Klaxon().toJsonString(args))
+        this.runtime.runOnJsThread {
+            emitter.postMessage(name, event, Klaxon().toJsonString(args))
+        }
     }
 }

@@ -3,8 +3,8 @@ package com.openland.open.view
 import android.content.Context
 import android.widget.FrameLayout
 import com.facebook.litho.LithoView
-import com.openland.mentaljs.jsc.modules.MentalRuntime
-import com.openland.mentaljs.jsc.modules.getNativeModule
+import com.openland.open.MentalRuntime
+import com.openland.open.getNativeModule
 import com.openland.open.OpenNativeApplication
 import com.openland.open.modules.UIManager
 

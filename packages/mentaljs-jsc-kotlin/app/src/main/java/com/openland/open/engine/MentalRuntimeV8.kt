@@ -6,10 +6,10 @@ import android.os.Looper
 import com.eclipsesource.v8.V8
 import com.eclipsesource.v8.V8Object
 import com.eclipsesource.v8.utils.V8ObjectUtils
-import com.openland.mentaljs.jsc.modules.MentalJSModule
-import com.openland.mentaljs.jsc.modules.MentalMethod
-import com.openland.mentaljs.jsc.modules.MentalNativeModule
-import com.openland.mentaljs.jsc.modules.MentalRuntime
+import com.openland.open.MentalJSModule
+import com.openland.open.MentalMethod
+import com.openland.open.MentalNativeModule
+import com.openland.open.MentalRuntime
 import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
@@ -63,12 +63,27 @@ class MentalRuntimeV8 : MentalRuntime {
         }
     }
 
+    override fun started() {
+        this.handler.post {
+            for (module in modules) {
+                module.started(this)
+            }
+        }
+    }
+
+    override fun runOnJsThread(callback: () -> Unit) {
+        this.handler.post(callback)
+    }
+
     override fun <T : MentalJSModule> getJsModule(clazz: KClass<T>): T {
         return Proxy.newProxyInstance(clazz.java.classLoader, arrayOf(clazz.java)) { proxy, method, args ->
             if (!thread.looper.isCurrentThread) {
                 throw Error("JS modules need to be executed on JS thread")
             }
             val obj = jsModules.getObject(clazz.simpleName)
+            if (obj.isUndefined) {
+                throw Error("Unable to find js module " + clazz.simpleName)
+            }
             obj.executeVoidFunction(method.name, V8ObjectUtils.toV8Array(this.runtime, args.toList()))
         } as T
     }

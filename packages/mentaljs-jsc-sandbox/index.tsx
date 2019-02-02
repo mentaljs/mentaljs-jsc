@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { AppRegistry } from "../mentaljs-jsc-view/AppRegistry";
 import { createView } from "../mentaljs-jsc-view";
 

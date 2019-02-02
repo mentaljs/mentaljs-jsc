@@ -11,10 +11,10 @@
         "jsx": "react"
     },
     "include": [
-        "packages/mentaljs-jsc/*.ts",
-        "packages/mentaljs-jsc-core/*.ts",
-        "packages/mentaljs-jsc-sandbox/*.ts",
-        "packages/mentaljs-jsc-view/*.ts"
+        "packages/mentaljs-jsc",
+        "packages/mentaljs-jsc-core",
+        "packages/mentaljs-jsc-sandbox",
+        "packages/mentaljs-jsc-view"
     ],
     "files": [
         "./packages/mentaljs-jsc-core/typings.d.ts",
