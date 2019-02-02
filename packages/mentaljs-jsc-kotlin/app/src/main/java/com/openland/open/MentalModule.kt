@@ -10,7 +10,7 @@ interface MentalRuntime {
 
     // Execution
 
-    fun registerNativeModule(module: MentalNativeModule)
+    fun registerNativeModule(module: MentalNativeModule, spec: ModuleSpec)
 
     fun <T : MentalJSModule> getJsModule(clazz: KClass<T>): T
     fun <T : MentalNativeModule> getNativeModule(clazz: KClass<T>): T

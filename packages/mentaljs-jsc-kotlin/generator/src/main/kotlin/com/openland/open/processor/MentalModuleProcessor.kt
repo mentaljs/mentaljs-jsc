@@ -1,7 +1,6 @@
 package com.openland.open.processor
 
 import com.fasterxml.jackson.core.TreeNode
-import com.fasterxml.jackson.jr.stree.JrsNumber
 import com.google.auto.service.AutoService
 import com.openland.open.*
 import com.squareup.kotlinpoet.*
@@ -32,12 +31,12 @@ class MentalModuleProcessor : AbstractProcessor() {
         roundEnv.getElementsAnnotatedWith(MentalModule::class.java).forEach {
             val pack = processingEnv.elementUtils.getPackageOf(it).toString()
             val name = it.simpleName.toString()
-            val rname = name + "_Descriptor"
+            val rname = name + "Spec"
 
             val fileBuilder = FileSpec.builder(pack, "$rname")
                     .addStaticImport("com.openland.open", "ModuleMethodInvoker")
             val typeSpecBuilder = TypeSpec.objectBuilder(rname)
-                    .superclass(ModuleDescriptor::class.java)
+                    .superclass(ModuleSpec::class.java)
 
             var body = "return mapOf<String, ModuleMethodInvoker>("
             var bodyFirst = true

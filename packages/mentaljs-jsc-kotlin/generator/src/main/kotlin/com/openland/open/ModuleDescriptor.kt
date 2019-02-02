@@ -18,6 +18,6 @@ abstract class Serializer {
     abstract fun parse(source: TreeNode): Any
 }
 
-abstract class ModuleDescriptor {
+abstract class ModuleSpec {
     abstract fun getModuleMethods(): Map<String, ModuleMethodInvoker>
 }

@@ -2,11 +2,8 @@ package com.openland.open
 
 import android.app.Application
 import com.facebook.soloader.SoLoader
-import com.openland.open.modules.ConsoleModule
-import com.openland.open.modules.EventEmitterModule
-import com.openland.open.modules.TimerModule
-import com.openland.open.modules.UIManager
 import com.openland.open.engine.MentalRuntimeV8
+import com.openland.open.modules.*
 import java.io.IOException
 
 abstract class OpenNativeApplication : Application() {
@@ -20,12 +17,12 @@ abstract class OpenNativeApplication : Application() {
         this.runtime = MentalRuntimeV8()
 
         // Load Modules
-        this.runtime.registerNativeModule(ConsoleModule())
-        this.runtime.registerNativeModule(TimerModule())
-        this.runtime.registerNativeModule(EventEmitterModule())
-        this.runtime.registerNativeModule(UIManager())
+        this.runtime.registerNativeModule(ConsoleModule(), ConsoleModuleSpec)
+        this.runtime.registerNativeModule(TimerModule(), TimerModuleSpec)
+        this.runtime.registerNativeModule(EventEmitterModule(), EventEmitterModuleSpec)
+        this.runtime.registerNativeModule(UIManager(), UIManagerSpec)
         for (m in this.getModules()) {
-            this.runtime.registerNativeModule(m)
+            this.runtime.registerNativeModule(m.first, m.second)
         }
 
         // Start VM
@@ -35,7 +32,7 @@ abstract class OpenNativeApplication : Application() {
         this.runtime.started()
     }
 
-    abstract fun getModules(): Collection<MentalNativeModule>
+    abstract fun getModules(): Collection<Pair<MentalNativeModule, ModuleSpec>>
 
     private fun loadData(inFile: String): String {
         var tContents = ""

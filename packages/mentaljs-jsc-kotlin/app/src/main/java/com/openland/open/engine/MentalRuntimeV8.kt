@@ -16,7 +16,7 @@ import kotlin.reflect.KParameter
 
 class MentalRuntimeV8 : MentalRuntime {
 
-    private var modules = mutableListOf<MentalNativeModule>()
+    private var modules = mutableListOf<Pair<MentalNativeModule, ModuleSpec>>()
     private var modulesMap = mutableMapOf<KClass<*>, MentalNativeModule>()
     lateinit var runtime: V8
     lateinit var nativeModules: V8Object
@@ -54,11 +54,8 @@ class MentalRuntimeV8 : MentalRuntime {
 
             for (module in modules) {
                 start = System.currentTimeMillis()
-                val descriptor = Class
-                        .forName(module::class.java.name + "_Descriptor")
-                        .kotlin
-                        .objectInstance as ModuleDescriptor
-                Log.d("MentalRuntime", "${module.name} prep time: ${System.currentTimeMillis() - start} ms")
+                val descriptor = module.second
+                Log.d("MentalRuntime", "${module.first.name} prep time: ${System.currentTimeMillis() - start} ms")
                 start = System.currentTimeMillis()
                 val v8Object = V8Object(this.runtime)
                 for (m in descriptor.getModuleMethods()) {
@@ -75,7 +72,7 @@ class MentalRuntimeV8 : MentalRuntime {
                         src.release()
                         args.release()
                         runOnWorkerThread {
-                            m.value.invoke(module, args2 as Array<MethodArgument>)
+                            m.value.invoke(module.first, args2 as Array<MethodArgument>)
                         }
                     }, m.key)
                 }
@@ -87,9 +84,9 @@ class MentalRuntimeV8 : MentalRuntime {
 //                    }
 //                    v8Object.registerJavaMethod(module, it.name, name, it.parameters.filter { it.kind === KParameter.Kind.VALUE }.map { (it.type.classifier!! as KClass<*>).java }.toTypedArray())
 //                }
-                nativeModules.add(module.name, v8Object)
+                nativeModules.add(module.first.name, v8Object)
 
-                Log.d("MentalRuntime", "${module.name} start time: ${System.currentTimeMillis() - start} ms")
+                Log.d("MentalRuntime", "${module.first.name} start time: ${System.currentTimeMillis() - start} ms")
                 start = System.currentTimeMillis()
             }
 
@@ -97,7 +94,7 @@ class MentalRuntimeV8 : MentalRuntime {
             // start = System.currentTimeMillis()
 
             for (module in modules) {
-                module.initialize(this)
+                module.first.initialize(this)
             }
 
             Log.d("MentalRuntime", "Modules init time: ${System.currentTimeMillis() - start} ms")
@@ -109,7 +106,7 @@ class MentalRuntimeV8 : MentalRuntime {
         this.handler.post {
             val start = System.currentTimeMillis()
             for (module in modules) {
-                module.started(this)
+                module.first.started(this)
             }
             Log.d("MentalRuntime", "Modules start completed: ${System.currentTimeMillis() - start} ms")
         }
@@ -140,8 +137,8 @@ class MentalRuntimeV8 : MentalRuntime {
         return this.modulesMap[clazz] as T
     }
 
-    override fun registerNativeModule(module: MentalNativeModule) {
-        this.modules.add(module)
+    override fun registerNativeModule(module: MentalNativeModule, spec: ModuleSpec) {
+        this.modules.add(module to spec)
         this.modulesMap[module.javaClass.kotlin] = module
     }
 
