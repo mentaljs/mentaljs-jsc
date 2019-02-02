@@ -4,27 +4,38 @@ import android.util.Log
 import com.openland.open.MentalMethod
 import com.openland.open.MentalModule
 import com.openland.open.MentalNativeModule
+import java.util.concurrent.Executors
 
 @MentalModule
 class ConsoleModule : MentalNativeModule("Console") {
 
+    private val executor = Executors.newSingleThreadExecutor()
+
     @MentalMethod
     fun log(msg: String) {
-        Log.i("MentalJS", msg)
+        executor.submit {
+            Log.i("MentalJS", msg)
+        }
     }
 
     @MentalMethod
     fun debug(msg: String) {
-        Log.d("MentalJS", msg)
+        executor.submit {
+            Log.d("MentalJS", msg)
+        }
     }
 
     @MentalMethod
     fun error(msg: String) {
-        Log.e("MentalJS", msg)
+        executor.submit {
+            Log.e("MentalJS", msg)
+        }
     }
 
     @MentalMethod
     fun warn(msg: String) {
-        Log.w("MentalJS", msg)
+        executor.submit {
+            Log.w("MentalJS", msg)
+        }
     }
 }

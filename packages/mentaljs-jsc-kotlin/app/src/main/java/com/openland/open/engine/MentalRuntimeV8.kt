@@ -129,7 +129,9 @@ class MentalRuntimeV8 : MentalRuntime {
             if (obj.isUndefined) {
                 throw Error("Unable to find js module " + clazz.simpleName)
             }
+            val start = System.currentTimeMillis()
             obj.executeVoidFunction(method.name, V8ObjectUtils.toV8Array(this.runtime, args.toList()))
+            Log.d("MentalRuntime", "${clazz.simpleName}.${method.name} time: ${System.currentTimeMillis() - start} ms")
         } as T
     }
 
