@@ -31,8 +31,6 @@ inline fun <reified T : MentalNativeModule> MentalRuntime.getNativeModule(): T {
     return this.getNativeModule(T::class)
 }
 
-annotation class MentalMethod(val name: String = "")
-
 abstract class MentalNativeModule(val name: String) {
     open fun initialize(runtime: MentalRuntime) {
 

@@ -7,6 +7,7 @@ interface JSTimer : MentalJSModule {
     fun runCallbacks(ids: List<Int>)
 }
 
+@MentalModule
 class TimerModule : MentalNativeModule("Timer") {
 
     private lateinit var runtime: MentalRuntime

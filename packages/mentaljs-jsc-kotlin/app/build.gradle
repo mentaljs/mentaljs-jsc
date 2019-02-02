@@ -3,6 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+kapt {
+    generateStubs = true
+}
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -20,6 +24,11 @@ android {
             exclude 'lib/armeabi/**'
             exclude 'lib/x86_64/**'
         }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
     }
     buildTypes {
         release {
@@ -30,6 +39,10 @@ android {
 }
 
 dependencies {
+
+    // Modules
+    implementation project(':generator')
+    kapt project(":generator")
 
     // Kotlin and Android
     implementation fileTree(dir: 'libs', include: ['*.jar'])

@@ -2,10 +2,12 @@ package com.openland.mentaljs.jsc.modules
 
 import com.eclipsesource.v8.V8Object
 import com.openland.open.MentalMethod
+import com.openland.open.MentalModule
 import com.openland.open.MentalNativeModule
 import com.openland.open.MentalRuntime
 import com.openland.open.engine.MentalRuntimeV8
 
+@MentalModule
 class BindingBenchmarkModule : MentalNativeModule("BindingBenchmarking") {
     override fun initialize(runtime: MentalRuntime) {
         val r = runtime as MentalRuntimeV8

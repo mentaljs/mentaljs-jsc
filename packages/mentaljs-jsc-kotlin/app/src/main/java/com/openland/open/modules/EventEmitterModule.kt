@@ -1,15 +1,13 @@
 package com.openland.open.modules
 
 import com.beust.klaxon.Klaxon
-import com.openland.open.MentalJSModule
-import com.openland.open.MentalNativeModule
-import com.openland.open.MentalRuntime
-import com.openland.open.getJsModule
+import com.openland.open.*
 
 interface EventEmitterJS : MentalJSModule {
     fun postMessage(name: String, event: String, args: String)
 }
 
+@MentalModule
 class EventEmitterModule : MentalNativeModule("EventEmitter") {
 
     private lateinit var emitter: EventEmitterJS

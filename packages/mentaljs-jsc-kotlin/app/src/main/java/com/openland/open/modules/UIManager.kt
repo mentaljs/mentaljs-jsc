@@ -2,15 +2,13 @@ package com.openland.open.modules
 
 import android.util.Log
 import com.beust.klaxon.Klaxon
-import com.openland.open.MentalMethod
-import com.openland.open.MentalNativeModule
-import com.openland.open.MentalRuntime
-import com.openland.open.EventEmitter
+import com.openland.open.*
 import com.openland.open.view.*
 
 class AttachRootEvent(val id: Int, val name: String)
 class DetachRootEvent(val id: Int)
 
+@MentalModule
 class UIManager : MentalNativeModule("UIManager") {
 
     private lateinit var eventEmitter: EventEmitter
@@ -18,7 +16,7 @@ class UIManager : MentalNativeModule("UIManager") {
     private var nextRootId: Int = 1
     private var views = mutableMapOf<Int, OpenRootView>()
     private var pending = arrayListOf<AttachRootEvent>()
-    private lateinit var runtime: MentalRuntime;
+    private lateinit var runtime: MentalRuntime
 
     override fun initialize(runtime: MentalRuntime) {
         this.runtime = runtime

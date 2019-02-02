@@ -2,8 +2,10 @@ package com.openland.open.modules
 
 import android.util.Log
 import com.openland.open.MentalMethod
+import com.openland.open.MentalModule
 import com.openland.open.MentalNativeModule
 
+@MentalModule
 class ConsoleModule : MentalNativeModule("Console") {
 
     @MentalMethod

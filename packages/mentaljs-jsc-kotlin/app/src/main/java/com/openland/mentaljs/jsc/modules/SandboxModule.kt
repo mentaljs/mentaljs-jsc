@@ -1,10 +1,8 @@
 package com.openland.mentaljs.jsc.modules
 
-import com.openland.open.EventEmitter
-import com.openland.open.MentalMethod
-import com.openland.open.MentalNativeModule
-import com.openland.open.MentalRuntime
+import com.openland.open.*
 
+@MentalModule
 class SandboxModule : MentalNativeModule("SandboxModule") {
 
     private lateinit var eventEmitter: EventEmitter
