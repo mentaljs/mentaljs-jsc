@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { AppRegistry } from "../mentaljs-jsc-view/AppRegistry";
 import { createView } from "../mentaljs-jsc-view";
+import { processColor } from '../mentaljs-jsc-view/internals/processColor';
 
 // import { NativeEventEmitter } from "../mentaljs-jsc-core/NativeEventEmitter";
 // import { getNativeModule } from "../mentaljs-jsc-core/getNativeModule";
@@ -14,7 +15,12 @@ import { createView } from "../mentaljs-jsc-view";
 
 // setInterval(() => { nativeModule.method() }, 1000);
 
-const XView = createView<{ width?: number, height?: number, backgroundColor?: string }>('XView');
+const XViewNative = createView<{ width?: number | null, height?: number | null, backgroundColor?: number | null }>('XView');
+
+const XView = (props: { width?: number | null, height?: number | null, backgroundColor?: string | null, children?: any }) => {
+    let { backgroundColor, ...other } = props;
+    return (<XViewNative {...other} backgroundColor={processColor(backgroundColor)} />)
+}
 
 const RootView = () => {
     return (

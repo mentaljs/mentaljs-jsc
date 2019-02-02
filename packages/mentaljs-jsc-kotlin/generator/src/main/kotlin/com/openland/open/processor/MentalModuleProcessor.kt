@@ -108,9 +108,9 @@ class MentalModuleProcessor : AbstractProcessor() {
                     body += "val _" + e.simpleName.toString() + " = source.get(\"${e.simpleName}\")\n"
                     body += "if (_" + e.simpleName.toString() + " != null) {\n"
                     if (e.asType().toString() == "java.lang.String") {
-                        body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + "as JrsString).value;\n"
+                        body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsString).value;\n"
                     } else if (e.asType().toString() == "java.lang.Integer") {
-                        body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + "as JrsNumber).value.toInt();\n"
+                        body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsNumber).value.toInt();\n"
                     } else if (e.asType().toString() == "java.lang.Float" || e.asType().toString() == "float") {
                         body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsNumber).value.toFloat();\n"
                     } else {

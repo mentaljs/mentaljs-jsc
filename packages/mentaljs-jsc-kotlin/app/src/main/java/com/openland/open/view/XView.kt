@@ -25,6 +25,7 @@ class XViewProps {
     var marginTop: Float? = null
     var marginLeft: Float? = null
     var marginRight: Float? = null
+    var backgroundColor: Int? = null
 }
 
 @LayoutSpec
@@ -40,7 +41,9 @@ object XViewSpec {
             res.heightDip(spec.height!!)
         }
 
-        res.backgroundColor(Color.RED)
+        if (spec.backgroundColor != null) {
+            res.backgroundColor(spec.backgroundColor!!)
+        }
 
         for (c in children) {
             res.child(ViewResolver.resolveView(context, c.type, c.props, c.children.toTypedArray(), runtime))
