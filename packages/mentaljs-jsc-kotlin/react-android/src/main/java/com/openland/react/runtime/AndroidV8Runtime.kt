@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 
 class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: Looper) : JavaScriptRuntime {
 
-    private var modules = mutableListOf<Pair<NativeModule, NativeModuleSpec>>()
+    private var modules = mutableListOf<NativeModule>()
     private var modulesMap = mutableMapOf<KClass<*>, NativeModule>()
     lateinit var runtime: V8
     lateinit var nativeModules: V8Object
@@ -36,8 +36,8 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
 
             for (module in modules) {
                 start = System.currentTimeMillis()
-                val descriptor = module.second
-                Log.d("MentalRuntime", "${module.first.name} prep time: ${System.currentTimeMillis() - start} ms")
+                val descriptor = Class.forName(module::class.qualifiedName + "Spec").newInstance() as NativeModuleSpec
+                Log.d("MentalRuntime", "${module.name} prep time: ${System.currentTimeMillis() - start} ms")
                 start = System.currentTimeMillis()
                 val v8Object = V8Object(this.runtime)
                 for (m in descriptor.getModuleMethods()) {
@@ -53,20 +53,20 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
                         }
                         src.release()
                         args.release()
-                        m.value.invoke(module.first, args2 as Array<MethodArgument>)
+                        m.value.invoke(module, args2 as Array<MethodArgument>)
                         this.workerHandler.post {
-                            m.value.invoke(module.first, args2 as Array<MethodArgument>)
+                            m.value.invoke(module, args2 as Array<MethodArgument>)
                         }
                     }, m.key)
                 }
-                nativeModules.add(module.first.name, v8Object)
+                nativeModules.add(module.name, v8Object)
 
-                Log.d("MentalRuntime", "${module.first.name} start time: ${System.currentTimeMillis() - start} ms")
+                Log.d("MentalRuntime", "${module.name} start time: ${System.currentTimeMillis() - start} ms")
                 start = System.currentTimeMillis()
             }
 
             for (module in modules) {
-                module.first.initialize(this)
+                module.initialize(this)
             }
 
             Log.d("MentalRuntime", "Modules init time: ${System.currentTimeMillis() - start} ms")
@@ -77,20 +77,12 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
         this.handler.post {
             val start = System.currentTimeMillis()
             for (module in modules) {
-                module.first.started(this)
+                module.started(this)
             }
             Log.d("MentalRuntime", "Modules start completed: ${System.currentTimeMillis() - start} ms")
         }
     }
 
-    //    override fun runOnJsThread(callback: () -> Unit) {
-//        this.handler.post(callback)
-//    }
-//
-//    override fun runOnWorkerThread(callback: () -> Unit) {
-//        this.workerHandler.post(callback)
-//    }
-//
     override fun <T : JavaScriptModule> getJsModule(clazz: KClass<T>): T {
         return Proxy.newProxyInstance(clazz.java.classLoader, arrayOf(clazz.java)) { proxy, method, args ->
             if (!jsLooper.isCurrentThread) {
@@ -114,8 +106,8 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
         return this.modulesMap[clazz] as T
     }
 
-    override fun registerNativeModule(module: NativeModule, spec: NativeModuleSpec) {
-        this.modules.add(module to spec)
+    override fun registerNativeModule(module: NativeModule) {
+        this.modules.add(module)
         this.modulesMap[module.javaClass.kotlin] = module
     }
 

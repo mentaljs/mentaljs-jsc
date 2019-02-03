@@ -6,7 +6,7 @@ interface JavaScriptRuntime {
 
     // Modules
 
-    fun registerNativeModule(module: NativeModule, spec: NativeModuleSpec)
+    fun registerNativeModule(module: NativeModule)
     fun <T : JavaScriptModule> getJsModule(clazz: KClass<T>): T
     fun <T : NativeModule> getNativeModule(clazz: KClass<T>): T
 

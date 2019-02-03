@@ -1,16 +1,13 @@
 package com.openland.open.view
 
-import android.graphics.Color
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.Row
 import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.Prop
-import com.openland.react.JavaScriptRuntime
 import com.openland.react.MentalProps
 import com.openland.react.ReactContext
-import kotlinx.serialization.Serializable
 
 @MentalProps
 class XViewProps {

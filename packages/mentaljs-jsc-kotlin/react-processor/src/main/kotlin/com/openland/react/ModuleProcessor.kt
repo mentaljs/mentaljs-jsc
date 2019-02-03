@@ -14,7 +14,7 @@ import javax.lang.model.type.ExecutableType
 import javax.lang.model.type.TypeKind
 
 @AutoService(Processor::class)
-class MentalModuleProcessor : AbstractProcessor() {
+class ModuleProcessor : AbstractProcessor() {
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
         return mutableSetOf(MentalModule::class.java.name, MentalProps::class.java.name)
@@ -34,7 +34,7 @@ class MentalModuleProcessor : AbstractProcessor() {
 
             val fileBuilder = FileSpec.builder(pack, "$rname")
                     .addStaticImport("com.openland.react", "ModuleMethodInvoker")
-            val typeSpecBuilder = TypeSpec.objectBuilder(rname)
+            val typeSpecBuilder = TypeSpec.classBuilder(rname)
                     .superclass(NativeModuleSpec::class.java)
 
             var body = "return mapOf<String, ModuleMethodInvoker>("
@@ -117,7 +117,6 @@ class MentalModuleProcessor : AbstractProcessor() {
                     }
                     body += "}\n"
                 }
-                // body += e.simpleName.toString() + ": " + e.kind + "\n"
             }
 
             body += "return res\n"

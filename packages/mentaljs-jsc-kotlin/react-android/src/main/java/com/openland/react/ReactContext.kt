@@ -47,7 +47,7 @@ class AndroidTimer(looper: Looper) : TimerHandler {
     }
 }
 
-class ReactContext(val context: Context, val modules: Collection<Pair<NativeModule, NativeModuleSpec>>) {
+class ReactContext(val context: Context, val modules: Collection<NativeModule>) {
     private val thread = HandlerThread("v8-runner")
     private val workerThread = HandlerThread("v8-worker")
     private val runtime: AndroidV8Runtime
@@ -61,11 +61,11 @@ class ReactContext(val context: Context, val modules: Collection<Pair<NativeModu
         this.runtime = AndroidV8Runtime(thread.looper, workerThread.looper)
 
         // Modules
-        this.runtime.registerNativeModule(ConsoleModule(AndroidConsole), ConsoleModuleSpec)
-        this.runtime.registerNativeModule(TimerModule(AndroidTimer(thread.looper)), TimerModuleSpec)
-        this.runtime.registerNativeModule(EventEmitterModule(), EventEmitterModuleSpec)
+        this.runtime.registerNativeModule(ConsoleModule(AndroidConsole))
+        this.runtime.registerNativeModule(TimerModule(AndroidTimer(thread.looper)))
+        this.runtime.registerNativeModule(EventEmitterModule())
         for (m in modules) {
-            this.runtime.registerNativeModule(m.first, m.second)
+            this.runtime.registerNativeModule(m)
         }
 
         // Start VM
