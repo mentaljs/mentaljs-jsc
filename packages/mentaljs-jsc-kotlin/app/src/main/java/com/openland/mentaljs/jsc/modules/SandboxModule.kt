@@ -1,14 +1,14 @@
 package com.openland.mentaljs.jsc.modules
 
-import com.openland.open.*
+import com.openland.react.*
 
 @MentalModule
-class SandboxModule : MentalNativeModule("SandboxModule") {
+class SandboxModule : NativeModule("SandboxModule") {
 
-    private lateinit var eventEmitter: EventEmitter
+    private lateinit var eventEmitter: com.openland.react.EventEmitter
 
-    override fun initialize(runtime: MentalRuntime) {
-        this.eventEmitter = EventEmitter("sandbox", runtime)
+    override fun initialize(runtime: JavaScriptRuntime) {
+        this.eventEmitter = com.openland.react.EventEmitter("sandbox", runtime)
     }
 
     @MentalMethod

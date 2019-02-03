@@ -1,8 +1,7 @@
-package com.openland.open
+package com.openland.react
 
-import com.openland.open.modules.EventEmitterModule
 
-class EventEmitter(val name: String, private val runtime: MentalRuntime) {
+class EventEmitter(val name: String, private val runtime: JavaScriptRuntime) {
     private val module by lazy { runtime.getNativeModule<EventEmitterModule>() }
 
     fun postEvent(event: String) {

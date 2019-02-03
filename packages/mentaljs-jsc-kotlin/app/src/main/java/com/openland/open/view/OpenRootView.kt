@@ -6,13 +6,12 @@ import android.widget.FrameLayout
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
 import com.facebook.litho.widget.SolidColor
-import com.openland.open.MentalRuntime
-import com.openland.open.getNativeModule
 import com.openland.open.OpenNativeApplication
 import com.openland.open.modules.UIManager
+import com.openland.react.ReactContext
 
 class OpenRootView(val name: String, context: Context) : FrameLayout(context) {
-    private val runtime: MentalRuntime = (context.applicationContext as OpenNativeApplication).runtime
+    private val reactContext: ReactContext = (context.applicationContext as OpenNativeApplication).reactContext
     private val asyncContext = ComponentContext(context)
     private val lithoView = LithoView(context)
     private var viewId = 0
@@ -28,19 +27,19 @@ class OpenRootView(val name: String, context: Context) : FrameLayout(context) {
     fun setConfig(config: ViewSpec) {
         this.lithoView.setComponentAsync(RootView.create(asyncContext)
                 .spec(config)
-                .runtime(this.runtime)
+                .reactContext(this.reactContext)
                 .build())
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        this.viewId = this.runtime.getNativeModule<UIManager>()
+        this.viewId = this.reactContext.getNativeModule(UIManager::class)
                 .attachRootView(this.name, this)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        this.runtime.getNativeModule<UIManager>()
+        this.reactContext.getNativeModule(UIManager::class)
                 .detachRootView(this.viewId)
     }
 }

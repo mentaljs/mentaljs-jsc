@@ -1,25 +1,24 @@
-package com.openland.open.modules
+package com.openland.react
 
 import com.beust.klaxon.Klaxon
-import com.openland.open.*
 
-interface EventEmitterJS : MentalJSModule {
+interface EventEmitterJS : JavaScriptModule {
     fun postMessage(name: String, event: String, args: String)
 }
 
 @MentalModule
-class EventEmitterModule : MentalNativeModule("EventEmitter") {
+class EventEmitterModule : NativeModule("EventEmitter") {
 
     private lateinit var emitter: EventEmitterJS
-    private lateinit var runtime: MentalRuntime
+    private lateinit var runtime: JavaScriptRuntime
 
-    override fun initialize(runtime: MentalRuntime) {
+    override fun initialize(runtime: JavaScriptRuntime) {
         this.emitter = runtime.getJsModule()
         this.runtime = runtime
     }
 
     fun postMessage(name: String, event: String, args: Any?) {
-        this.runtime.runOnJsThread {
+        this.runtime.postToJsThread {
             emitter.postMessage(name, event, Klaxon().toJsonString(args))
         }
     }

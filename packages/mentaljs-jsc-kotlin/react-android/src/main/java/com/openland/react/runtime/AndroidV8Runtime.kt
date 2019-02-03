@@ -1,43 +1,25 @@
-package com.openland.open.engine
+package com.openland.react.runtime
 
 import android.os.Handler
-import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
-import com.eclipsesource.v8.JavaVoidCallback
 import com.eclipsesource.v8.V8
 import com.eclipsesource.v8.V8Object
 import com.eclipsesource.v8.V8Value
 import com.eclipsesource.v8.utils.V8ObjectUtils
-import com.openland.open.*
+import com.openland.react.*
 import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
-import kotlin.reflect.KParameter
 
-class MentalRuntimeV8 : MentalRuntime {
+class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: Looper) : JavaScriptRuntime {
 
-    private var modules = mutableListOf<Pair<MentalNativeModule, ModuleSpec>>()
-    private var modulesMap = mutableMapOf<KClass<*>, MentalNativeModule>()
+    private var modules = mutableListOf<Pair<NativeModule, NativeModuleSpec>>()
+    private var modulesMap = mutableMapOf<KClass<*>, NativeModule>()
     lateinit var runtime: V8
     lateinit var nativeModules: V8Object
     lateinit var jsModules: V8Object
-    private val thread = HandlerThread("v8-runner")
-    private val workerThread = HandlerThread("v8-worker")
-    override val looper: Looper
-    private val handler: Handler
-    private val workerHandler: Handler
-
-
-    init {
-        thread.start()
-        workerThread.start()
-        while (thread.looper == null || workerThread.looper == null) {
-            Thread.sleep(1)
-        }
-        looper = thread.looper
-        this.handler = Handler(looper)
-        this.workerHandler = Handler(workerThread.looper)
-    }
+    private val handler: Handler = Handler(jsLooper)
+    private val workerHandler: Handler = Handler(workerLooper)
 
     override fun start() {
         this.handler.post {
@@ -71,34 +53,23 @@ class MentalRuntimeV8 : MentalRuntime {
                         }
                         src.release()
                         args.release()
-                        runOnWorkerThread {
+                        m.value.invoke(module.first, args2 as Array<MethodArgument>)
+                        this.workerHandler.post {
                             m.value.invoke(module.first, args2 as Array<MethodArgument>)
                         }
                     }, m.key)
                 }
-//                module::class.members.filter { it.annotations.any { it is MentalMethod } }.forEach {
-//                    val annotation = it.annotations.find { it is MentalMethod }!! as MentalMethod
-//                    var name = it.name
-//                    if (annotation.name != "") {
-//                        name = annotation.name
-//                    }
-//                    v8Object.registerJavaMethod(module, it.name, name, it.parameters.filter { it.kind === KParameter.Kind.VALUE }.map { (it.type.classifier!! as KClass<*>).java }.toTypedArray())
-//                }
                 nativeModules.add(module.first.name, v8Object)
 
                 Log.d("MentalRuntime", "${module.first.name} start time: ${System.currentTimeMillis() - start} ms")
                 start = System.currentTimeMillis()
             }
 
-            // Log.d("MentalRuntime", "Modules registration time: ${System.currentTimeMillis() - start} ms")
-            // start = System.currentTimeMillis()
-
             for (module in modules) {
                 module.first.initialize(this)
             }
 
             Log.d("MentalRuntime", "Modules init time: ${System.currentTimeMillis() - start} ms")
-            // start = System.currentTimeMillis()
         }
     }
 
@@ -112,17 +83,17 @@ class MentalRuntimeV8 : MentalRuntime {
         }
     }
 
-    override fun runOnJsThread(callback: () -> Unit) {
-        this.handler.post(callback)
-    }
-
-    override fun runOnWorkerThread(callback: () -> Unit) {
-        this.workerHandler.post(callback)
-    }
-
-    override fun <T : MentalJSModule> getJsModule(clazz: KClass<T>): T {
+    //    override fun runOnJsThread(callback: () -> Unit) {
+//        this.handler.post(callback)
+//    }
+//
+//    override fun runOnWorkerThread(callback: () -> Unit) {
+//        this.workerHandler.post(callback)
+//    }
+//
+    override fun <T : JavaScriptModule> getJsModule(clazz: KClass<T>): T {
         return Proxy.newProxyInstance(clazz.java.classLoader, arrayOf(clazz.java)) { proxy, method, args ->
-            if (!thread.looper.isCurrentThread) {
+            if (!jsLooper.isCurrentThread) {
                 throw Error("JS modules need to be executed on JS thread")
             }
             val obj = jsModules.getObject(clazz.simpleName)
@@ -135,11 +106,15 @@ class MentalRuntimeV8 : MentalRuntime {
         } as T
     }
 
-    override fun <T : MentalNativeModule> getNativeModule(clazz: KClass<T>): T {
+    override fun postToJsThread(callback: () -> Unit) {
+        this.handler.post(callback)
+    }
+
+    override fun <T : NativeModule> getNativeModule(clazz: KClass<T>): T {
         return this.modulesMap[clazz] as T
     }
 
-    override fun registerNativeModule(module: MentalNativeModule, spec: ModuleSpec) {
+    override fun registerNativeModule(module: NativeModule, spec: NativeModuleSpec) {
         this.modules.add(module to spec)
         this.modulesMap[module.javaClass.kotlin] = module
     }

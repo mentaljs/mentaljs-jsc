@@ -1,42 +1,37 @@
 package com.openland.open.modules
 
 import android.util.Log
-import com.beust.klaxon.Klaxon
-import com.fasterxml.jackson.core.TreeNode
-import com.openland.open.*
 import com.openland.open.view.*
-import org.json.JSONObject
-import com.fasterxml.jackson.jr.ob.JSON
-import com.fasterxml.jackson.jr.stree.JacksonJrsTreeCodec
+import com.openland.react.*
 
 class AttachRootEvent(val id: Int, val name: String)
 class DetachRootEvent(val id: Int)
 
 @MentalModule
-class UIManager : MentalNativeModule("UIManager") {
+class UIManager : NativeModule("UIManager") {
 
-    private lateinit var eventEmitter: EventEmitter
+    private lateinit var eventEmitter: com.openland.react.EventEmitter
     private var inited = false
     private var nextRootId: Int = 1
     private var views = mutableMapOf<Int, OpenRootView>()
     private var pending = arrayListOf<AttachRootEvent>()
-    private lateinit var runtime: MentalRuntime
+    private lateinit var runtime: JavaScriptRuntime
 
-    override fun initialize(runtime: MentalRuntime) {
+    override fun initialize(runtime: JavaScriptRuntime) {
         this.runtime = runtime
 
-        ViewResolver.registerView("XView", XViewProps::class) { ctx, props, children, runtime ->
+        ViewResolver.registerView("XView", XViewProps::class) { ctx, props, children, reactContext ->
             XView.create(ctx)
                     .spec(props as XViewProps)
                     .children(children)
-                    .runtime(runtime)
+                    .reactContext(reactContext)
                     .build()
 
         }
     }
 
-    override fun started(runtime: MentalRuntime) {
-        this.eventEmitter = EventEmitter("AppRegistry", runtime)
+    override fun started(runtime: JavaScriptRuntime) {
+        this.eventEmitter = com.openland.react.EventEmitter("AppRegistry", runtime)
         this.inited = true
         for (p in pending) {
             this.eventEmitter.postEvent("start", p)

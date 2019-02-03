@@ -8,23 +8,24 @@ import com.fasterxml.jackson.jr.stree.JacksonJrsTreeCodec
 import com.fasterxml.jackson.jr.stree.JrsArray
 import com.fasterxml.jackson.jr.stree.JrsObject
 import com.fasterxml.jackson.jr.stree.JrsString
-import com.openland.open.MentalRuntime
-import com.openland.open.Serializer
+import com.openland.react.JavaScriptRuntime
+import com.openland.react.ReactContext
+import com.openland.react.Serializer
 import kotlin.reflect.KClass
 
 object ViewResolver {
     private val json = JSON.std.with(JacksonJrsTreeCodec())
     private val views = mutableMapOf<String, KClass<*>>()
-    private val viewResolver = mutableMapOf<String, (ComponentContext, Any, Array<ViewSpec>, MentalRuntime) -> Component>()
+    private val viewResolver = mutableMapOf<String, (ComponentContext, Any, Array<ViewSpec>, ReactContext) -> Component>()
 
     internal fun findProps(name: String): KClass<*> {
         return views[name]!!
     }
 
-    internal fun resolveView(ctx: ComponentContext, name: String, props: Any, children: Array<ViewSpec>, runtime: MentalRuntime) =
-            this.viewResolver[name]!!.invoke(ctx, props, children, runtime)
+    internal fun resolveView(ctx: ComponentContext, name: String, props: Any, children: Array<ViewSpec>, reactContext: ReactContext) =
+            this.viewResolver[name]!!.invoke(ctx, props, children, reactContext)
 
-    fun registerView(name: String, props: KClass<*>, resolve: (ComponentContext, Any, Array<ViewSpec>, MentalRuntime) -> Component) {
+    fun registerView(name: String, props: KClass<*>, resolve: (ComponentContext, Any, Array<ViewSpec>, ReactContext) -> Component) {
         views[name] = props
         viewResolver[name] = resolve
     }

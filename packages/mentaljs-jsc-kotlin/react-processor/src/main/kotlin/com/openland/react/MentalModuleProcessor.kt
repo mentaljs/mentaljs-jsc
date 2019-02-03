@@ -1,8 +1,7 @@
-package com.openland.open.processor
+package com.openland.react
 
 import com.fasterxml.jackson.core.TreeNode
 import com.google.auto.service.AutoService
-import com.openland.open.*
 import com.squareup.kotlinpoet.*
 import java.io.File
 import javax.annotation.processing.AbstractProcessor
@@ -34,9 +33,9 @@ class MentalModuleProcessor : AbstractProcessor() {
             val rname = name + "Spec"
 
             val fileBuilder = FileSpec.builder(pack, "$rname")
-                    .addStaticImport("com.openland.open", "ModuleMethodInvoker")
+                    .addStaticImport("com.openland.react", "ModuleMethodInvoker")
             val typeSpecBuilder = TypeSpec.objectBuilder(rname)
-                    .superclass(ModuleSpec::class.java)
+                    .superclass(NativeModuleSpec::class.java)
 
             var body = "return mapOf<String, ModuleMethodInvoker>("
             var bodyFirst = true

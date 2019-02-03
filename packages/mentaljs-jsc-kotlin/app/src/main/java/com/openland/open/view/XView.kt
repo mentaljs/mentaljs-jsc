@@ -7,8 +7,9 @@ import com.facebook.litho.Row
 import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.Prop
-import com.openland.open.MentalProps
-import com.openland.open.MentalRuntime
+import com.openland.react.JavaScriptRuntime
+import com.openland.react.MentalProps
+import com.openland.react.ReactContext
 import kotlinx.serialization.Serializable
 
 @MentalProps
@@ -32,7 +33,7 @@ class XViewProps {
 object XViewSpec {
 
     @OnCreateLayout
-    internal fun onCreateLayout(context: ComponentContext, @Prop spec: XViewProps, @Prop children: Array<ViewSpec>, @Prop runtime: MentalRuntime): Component {
+    internal fun onCreateLayout(context: ComponentContext, @Prop spec: XViewProps, @Prop children: Array<ViewSpec>, @Prop reactContext: ReactContext): Component {
         val res = Row.create(context)
         if (spec.width != null) {
             res.widthDip(spec.width!!)
@@ -46,7 +47,7 @@ object XViewSpec {
         }
 
         for (c in children) {
-            res.child(ViewResolver.resolveView(context, c.type, c.props, c.children.toTypedArray(), runtime))
+            res.child(ViewResolver.resolveView(context, c.type, c.props, c.children.toTypedArray(), reactContext))
         }
 
         return res.build()
