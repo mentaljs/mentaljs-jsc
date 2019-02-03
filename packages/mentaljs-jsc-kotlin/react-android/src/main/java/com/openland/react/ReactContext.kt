@@ -6,6 +6,8 @@ import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
 import com.openland.react.runtime.AndroidV8Runtime
+import com.openland.react.ui.NativeViewFactory
+import com.openland.react.ui.UIManager
 import java.io.IOException
 import kotlin.reflect.KClass
 
@@ -47,10 +49,11 @@ class AndroidTimer(looper: Looper) : TimerHandler {
     }
 }
 
-class ReactContext(val context: Context, val modules: Collection<NativeModule>) {
+class ReactContext(val context: Context, modules: Collection<NativeModule>, views: Collection<NativeViewFactory<*>>) {
     private val thread = HandlerThread("v8-runner")
     private val workerThread = HandlerThread("v8-worker")
     private val runtime: AndroidV8Runtime
+    val uiManager: UIManager = UIManager(this, views)
 
     init {
         thread.start()
@@ -64,6 +67,7 @@ class ReactContext(val context: Context, val modules: Collection<NativeModule>) 
         this.runtime.registerNativeModule(ConsoleModule(AndroidConsole))
         this.runtime.registerNativeModule(TimerModule(AndroidTimer(thread.looper)))
         this.runtime.registerNativeModule(EventEmitterModule())
+        this.runtime.registerNativeModule(uiManager)
         for (m in modules) {
             this.runtime.registerNativeModule(m)
         }

@@ -96,7 +96,7 @@ class ModuleProcessor : AbstractProcessor() {
                     .addStaticImport(pack, name)
                     .addStaticImport("com.fasterxml.jackson.jr.stree", "*")
 
-            val typeSpecBuilder = TypeSpec.objectBuilder(rname)
+            val typeSpecBuilder = TypeSpec.classBuilder(rname)
                     .superclass(Serializer::class)
 
             var body = "val res = $name()\n"

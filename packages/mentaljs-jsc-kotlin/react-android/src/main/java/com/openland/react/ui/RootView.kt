@@ -1,4 +1,4 @@
-package com.openland.open.view
+package com.openland.react.ui
 
 import com.facebook.litho.Column
 import com.facebook.litho.Component
@@ -7,6 +7,7 @@ import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.Prop
 import com.openland.react.ReactContext
+import com.openland.react.calculateComponent
 
 @LayoutSpec
 object RootViewSpec {
@@ -15,7 +16,7 @@ object RootViewSpec {
         val res = Column.create(context)
         res.widthPercent(100.0f)
         res.heightPercent(100.0f)
-        res.child(ViewResolver.resolveView(context, spec.type, spec.props, spec.children.toTypedArray(), reactContext))
+        res.child(calculateComponent(context, spec, reactContext))
         return res.build()
     }
 }

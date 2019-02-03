@@ -1,8 +1,8 @@
 package com.openland.mentaljs.jsc
 
-import com.openland.open.OpenNativeActivity
+import com.openland.react.ReactActivity
 
-class MainActivity : OpenNativeActivity() {
+class MainActivity : ReactActivity() {
 
     override fun getMainComponentName(): String {
         return "Root"

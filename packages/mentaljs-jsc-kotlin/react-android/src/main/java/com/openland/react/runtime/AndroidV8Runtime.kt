@@ -62,14 +62,16 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
                 nativeModules.add(module.name, v8Object)
 
                 Log.d("MentalRuntime", "${module.name} start time: ${System.currentTimeMillis() - start} ms")
-                start = System.currentTimeMillis()
+                // start = System.currentTimeMillis()
             }
 
             for (module in modules) {
+                start = System.currentTimeMillis()
                 module.initialize(this)
+                Log.d("MentalRuntime", "${module.name} init time: ${System.currentTimeMillis() - start} ms")
             }
 
-            Log.d("MentalRuntime", "Modules init time: ${System.currentTimeMillis() - start} ms")
+            // Log.d("MentalRuntime", "Modules init time: ${System.currentTimeMillis() - start} ms")
         }
     }
 

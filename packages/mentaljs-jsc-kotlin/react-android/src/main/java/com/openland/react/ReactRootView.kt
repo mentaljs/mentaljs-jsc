@@ -1,4 +1,4 @@
-package com.openland.open.view
+package com.openland.react
 
 import android.content.Context
 import android.graphics.Color
@@ -6,12 +6,12 @@ import android.widget.FrameLayout
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
 import com.facebook.litho.widget.SolidColor
-import com.openland.open.OpenNativeApplication
-import com.openland.open.modules.UIManager
-import com.openland.react.ReactContext
+import com.openland.react.ui.RootView
+import com.openland.react.ui.UIManager
+import com.openland.react.ui.ViewSpec
 
-class OpenRootView(val name: String, context: Context) : FrameLayout(context) {
-    private val reactContext: ReactContext = (context.applicationContext as OpenNativeApplication).reactContext
+class ReactRootView(val name: String, context: Context) : FrameLayout(context) {
+    private val reactContext: ReactContext = (context.applicationContext as ReactApplication).reactContext
     private val asyncContext = ComponentContext(context)
     private val lithoView = LithoView(context)
     private var viewId = 0

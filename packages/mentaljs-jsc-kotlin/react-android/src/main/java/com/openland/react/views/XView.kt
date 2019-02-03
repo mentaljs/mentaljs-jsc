@@ -1,4 +1,4 @@
-package com.openland.open.view
+package com.openland.react.views
 
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
@@ -8,6 +8,19 @@ import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.Prop
 import com.openland.react.MentalProps
 import com.openland.react.ReactContext
+import com.openland.react.calculateComponent
+import com.openland.react.ui.NativeViewFactory
+import com.openland.react.ui.ViewSpec
+
+class XViewFactory : NativeViewFactory<XViewProps>("XView", XViewProps::class) {
+    override fun createView(context: ComponentContext, props: XViewProps, children: Array<ViewSpec>, ctx: ReactContext): Component {
+        return XView.create(context)
+                .spec(props)
+                .children(children)
+                .reactContext(ctx)
+                .build()
+    }
+}
 
 @MentalProps
 class XViewProps {
@@ -44,7 +57,7 @@ object XViewSpec {
         }
 
         for (c in children) {
-            res.child(ViewResolver.resolveView(context, c.type, c.props, c.children.toTypedArray(), reactContext))
+            res.child(calculateComponent(context, c, reactContext))
         }
 
         return res.build()
