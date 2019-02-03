@@ -36,7 +36,7 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
 
             for (module in modules) {
                 start = System.currentTimeMillis()
-                val descriptor = Class.forName(module::class.qualifiedName + "Spec").newInstance() as NativeModuleSpec
+                val descriptor = Class.forName(module::class.java.canonicalName + "Spec").newInstance() as NativeModuleSpec
                 Log.d("MentalRuntime", "${module.name} prep time: ${System.currentTimeMillis() - start} ms")
                 start = System.currentTimeMillis()
                 val v8Object = V8Object(this.runtime)
@@ -53,7 +53,6 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
                         }
                         src.release()
                         args.release()
-                        m.value.invoke(module, args2 as Array<MethodArgument>)
                         this.workerHandler.post {
                             m.value.invoke(module, args2 as Array<MethodArgument>)
                         }
@@ -90,13 +89,13 @@ class AndroidV8Runtime(private val jsLooper: Looper, private val workerLooper: L
             if (!jsLooper.isCurrentThread) {
                 throw Error("JS modules need to be executed on JS thread")
             }
-            val obj = jsModules.getObject(clazz.simpleName)
+            val obj = jsModules.getObject(clazz.java.simpleName)
             if (obj.isUndefined) {
-                throw Error("Unable to find js module " + clazz.simpleName)
+                throw Error("Unable to find js module " + clazz.java.simpleName)
             }
             val start = System.currentTimeMillis()
             obj.executeVoidFunction(method.name, V8ObjectUtils.toV8Array(this.runtime, args.toList()))
-            Log.d("MentalRuntime", "${clazz.simpleName}.${method.name} time: ${System.currentTimeMillis() - start} ms")
+            Log.d("MentalRuntime", "${clazz.java.simpleName}.${method.name} time: ${System.currentTimeMillis() - start} ms")
         } as T
     }
 

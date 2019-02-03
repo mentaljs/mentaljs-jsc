@@ -1,6 +1,6 @@
 package com.openland.react
 
-import com.beust.klaxon.Klaxon
+import org.json.JSONObject
 
 interface EventEmitterJS : JavaScriptModule {
     fun postMessage(name: String, event: String, args: String)
@@ -17,9 +17,9 @@ class EventEmitterModule : NativeModule("EventEmitter") {
         this.runtime = runtime
     }
 
-    fun postMessage(name: String, event: String, args: Any?) {
+    fun postMessage(name: String, event: String, args: JSONObject?) {
         this.runtime.postToJsThread {
-            emitter.postMessage(name, event, Klaxon().toJsonString(args))
+            emitter.postMessage(name, event, args?.toString() ?: "{}")
         }
     }
 }

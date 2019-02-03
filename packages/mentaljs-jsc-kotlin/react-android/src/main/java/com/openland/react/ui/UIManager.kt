@@ -10,9 +10,7 @@ import com.fasterxml.jackson.jr.stree.JrsArray
 import com.fasterxml.jackson.jr.stree.JrsObject
 import com.fasterxml.jackson.jr.stree.JrsString
 import com.openland.react.*
-
-class AttachRootEvent(val id: Int, val name: String)
-class DetachRootEvent(val id: Int)
+import org.json.JSONObject
 
 @MentalModule
 class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewFactory<*>>) : NativeModule("UIManager") {
@@ -21,7 +19,7 @@ class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewF
     private var inited = false
     private var nextRootId: Int = 1
     private var views = mutableMapOf<Int, ReactRootView>()
-    private var pending = arrayListOf<AttachRootEvent>()
+    private var pending = arrayListOf<JSONObject>()
     private lateinit var runtime: JavaScriptRuntime
     private val nativeViewRepository = NativeViewRepository()
     private val json = JSON.std.with(JacksonJrsTreeCodec())
@@ -55,15 +53,23 @@ class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewF
         val id = this.nextRootId++
         this.views[id] = view
         if (!this.inited) {
-            this.pending.add(AttachRootEvent(id, name))
+            this.pending.add(JSONObject().apply {
+                put("id", id)
+                put("name", name)
+            })
         } else {
-            this.eventEmitter.postEvent("start", AttachRootEvent(id, name))
+            this.eventEmitter.postEvent("start", JSONObject().apply {
+                put("id", id)
+                put("name", name)
+            })
         }
         return id
     }
 
     fun detachRootView(id: Int) {
-        this.eventEmitter.postEvent("stop", DetachRootEvent(id))
+        this.eventEmitter.postEvent("stop", JSONObject().apply {
+            put("id", id)
+        })
         this.views.remove(id)
     }
 
