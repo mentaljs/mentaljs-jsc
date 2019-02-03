@@ -11,6 +11,7 @@ import com.openland.react.calculateComponent
 
 @LayoutSpec
 object RootViewSpec {
+
     @OnCreateLayout
     internal fun onCreateLayout(context: ComponentContext, @Prop spec: ViewSpec, @Prop reactContext: ReactContext): Component {
         val res = Column.create(context)

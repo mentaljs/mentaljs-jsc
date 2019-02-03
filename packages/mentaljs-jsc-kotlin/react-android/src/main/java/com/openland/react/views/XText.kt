@@ -10,9 +10,9 @@ class XTextProps {
     var fontSize: Float? = null
     var lineHeight: Float? = null
     var fontWeight: String? = null
-    var color: Int = Color.BLACK
+//    var color: Int = Color.BLACK
     var numberOfLines: Int? = null
-    var underline: Boolean = false
+//    var underline: Boolean = false
     // var textAlign: String? = null
 
     var onPress: ViewCallback? = null

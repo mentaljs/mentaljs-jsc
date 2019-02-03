@@ -109,7 +109,7 @@ class ModuleProcessor : AbstractProcessor() {
                     body += "if (_" + e.simpleName.toString() + " != null) {\n"
                     if (e.asType().toString() == "java.lang.String") {
                         body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsString).value;\n"
-                    } else if (e.asType().toString() == "java.lang.Integer") {
+                    } else if (e.asType().toString() == "java.lang.Integer" || e.asType().toString() == "int") {
                         body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsNumber).value.toInt();\n"
                     } else if (e.asType().toString() == "java.lang.Float" || e.asType().toString() == "float") {
                         body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsNumber).value.toFloat();\n"

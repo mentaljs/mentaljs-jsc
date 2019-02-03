@@ -108,7 +108,7 @@ class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewF
     }
 
     fun resolveView(context: ComponentContext, spec: ViewSpec): Component {
-        return this.nativeViewRepository.findViewFactory(spec.type).createView(context, spec.props, spec.children.toTypedArray(), this.ctx)
+        return this.nativeViewRepository.findViewFactory(spec.type).createView(context, spec.key, spec.props, spec.children.toTypedArray(), this.ctx)
     }
 
     //

@@ -10,10 +10,15 @@ import com.openland.react.calculateComponent
 import com.openland.react.ui.NativeViewFactory
 import com.openland.react.ui.ViewSpec
 import org.json.JSONObject
+import com.facebook.litho.animation.AnimatedProperties
+import com.facebook.litho.annotations.OnCreateTransition
+
 
 class XViewFactory : NativeViewFactory<XViewProps>("XView", XViewProps::class) {
-    override fun createView(context: ComponentContext, props: XViewProps, children: Array<ViewSpec>, ctx: ReactContext): Component {
+    override fun createView(context: ComponentContext, key: String, props: XViewProps, children: Array<ViewSpec>, ctx: ReactContext): Component {
         return XView.create(context)
+                .key(key)
+                .viewKey(key)
                 .spec(props)
                 .children(children)
                 .reactContext(ctx)
@@ -47,6 +52,7 @@ class XViewProps {
 
     var backgroundColor: Int? = null
     var opacity: Float? = null
+    var animate: String? = null
 
     var onPress: ViewCallback? = null
 }
@@ -55,7 +61,7 @@ class XViewProps {
 object XViewSpec {
 
     @OnCreateLayout
-    internal fun onCreateLayout(context: ComponentContext, @Prop spec: XViewProps, @Prop children: Array<ViewSpec>, @Prop reactContext: ReactContext): Component {
+    internal fun onCreateLayout(context: ComponentContext, @Prop viewKey: String, @Prop spec: XViewProps, @Prop children: Array<ViewSpec>, @Prop reactContext: ReactContext): Component {
         val res = Row.create(context)
 
         // Size
@@ -127,19 +133,33 @@ object XViewSpec {
             res.clickHandler(XView.onClick(context))
         }
 
-        
 
         // Children
         for (c in children) {
             res.child(calculateComponent(context, c, reactContext))
         }
 
+        res.transitionKey("view:$viewKey")
+
         return res.build()
     }
 
     @OnEvent(ClickEvent::class)
     @JvmName("onClick")
-    internal fun onClick(@Prop spec: XViewProps) {
+    internal fun onClick(context: ComponentContext, @Prop spec: XViewProps) {
         spec.onPress?.invoke(JSONObject())
+    }
+
+    @OnCreateTransition
+    internal fun onCreateTransition(c: ComponentContext, @Prop viewKey: String, @Prop spec: XViewProps): Transition {
+        Transition.allLayout()
+        val res = Transition.create("view:$viewKey")
+        if (spec.animate == "opacity" || spec.animate == "all") {
+            res.animate(AnimatedProperties.ALPHA)
+        }
+        if (spec.animate == "opacity" || spec.animate == "all") {
+            res.animate(AnimatedProperties.X)
+        }
+        return res
     }
 }

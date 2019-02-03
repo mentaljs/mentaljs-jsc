@@ -12,17 +12,17 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
-    implementation 'com.facebook.litho:litho-core:0.18.0'
-    implementation 'com.facebook.litho:litho-widget:0.18.0'
-    implementation 'com.facebook.litho:litho-fresco:0.18.0'
-    compileOnly 'com.facebook.litho:litho-annotations:0.18.0'
-    kapt 'com.facebook.litho:litho-processor:0.18.0'
-    annotationProcessor 'com.facebook.litho:litho-processor:0.18.0'
-    implementation 'com.facebook.litho:litho-sections-core:0.18.0'
-    implementation 'com.facebook.litho:litho-sections-widget:0.18.0'
-    compileOnly 'com.facebook.litho:litho-sections-annotations:0.18.0'
-    kapt 'com.facebook.litho:litho-sections-processor:0.18.0'
-    annotationProcessor 'com.facebook.litho:litho-sections-processor:0.18.0'
+    implementation "com.facebook.litho:litho-core:$litho_version"
+    implementation "com.facebook.litho:litho-widget:$litho_version"
+    implementation "com.facebook.litho:litho-fresco:$litho_version"
+    compileOnly "com.facebook.litho:litho-annotations:$litho_version"
+    kapt "com.facebook.litho:litho-processor:$litho_version"
+    annotationProcessor "com.facebook.litho:litho-processor:$litho_version"
+    implementation "com.facebook.litho:litho-sections-core:$litho_version"
+    implementation "com.facebook.litho:litho-sections-widget:$litho_version"
+    compileOnly "com.facebook.litho:litho-sections-annotations:$litho_version"
+    kapt "com.facebook.litho:litho-sections-processor:$litho_version"
+    annotationProcessor "com.facebook.litho:litho-sections-processor:$litho_version"
 
     kapt project(':react-processor')
 }
