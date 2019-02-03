@@ -13,7 +13,7 @@
     "@babel/preset-typescript": "^7.1.0",
     "@types/react": "^16.8.1",
     "babel-loader": "^8.0.5",
-    "react": "^16.7.0",
+    "react": "16.8.0-alpha.1",
     "react-reconciler": "^0.18.0",
     "symbol-es6": "^0.1.2",
     "typescript": "^3.3.1",

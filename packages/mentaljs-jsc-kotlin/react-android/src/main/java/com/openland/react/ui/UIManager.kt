@@ -16,6 +16,7 @@ import org.json.JSONObject
 class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewFactory<*>>) : NativeModule("UIManager") {
 
     private lateinit var eventEmitter: com.openland.react.EventEmitter
+    private lateinit var viewEventEmitter: EventEmitter
     private var inited = false
     private var nextRootId: Int = 1
     private var views = mutableMapOf<Int, ReactRootView>()
@@ -23,6 +24,11 @@ class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewF
     private lateinit var runtime: JavaScriptRuntime
     private val nativeViewRepository = NativeViewRepository()
     private val json = JSON.std.with(JacksonJrsTreeCodec())
+    private val callbackHandler = object : CallbackHandler {
+        override fun invoke(key: String, args: JSONObject) {
+            reportCallback(key, args)
+        }
+    }
 
     //
     // Initialization
@@ -37,7 +43,8 @@ class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewF
     }
 
     override fun started(runtime: JavaScriptRuntime) {
-        this.eventEmitter = com.openland.react.EventEmitter("AppRegistry", runtime)
+        this.eventEmitter = EventEmitter("AppRegistry", runtime)
+        this.viewEventEmitter = EventEmitter("UIManager", runtime)
         this.inited = true
         for (p in pending) {
             this.eventEmitter.postEvent("start", p)
@@ -91,7 +98,7 @@ class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewF
         val type = (obj.get("type") as JrsString).value
         val children = (obj.get("children") as JrsArray)
         val propsSerializer = this.nativeViewRepository.findPropsSerializer(type)
-        val props = propsSerializer.parse(obj.get("props"))
+        val props = propsSerializer.parse(obj.get("props"), this.callbackHandler)
 
         val ch = mutableListOf<ViewSpec>()
         for (i in 0 until children.size()) {
@@ -102,6 +109,17 @@ class UIManager(val ctx: ReactContext, val viewFactories: Collection<NativeViewF
 
     fun resolveView(context: ComponentContext, spec: ViewSpec): Component {
         return this.nativeViewRepository.findViewFactory(spec.type).createView(context, spec.props, spec.children.toTypedArray(), this.ctx)
+    }
+
+    //
+    // View Callbacks
+    //
+
+    fun reportCallback(key: String, args: JSONObject) {
+        this.viewEventEmitter.postEvent("event", JSONObject().apply {
+            put("key", key)
+            put("args", args)
+        })
     }
 
     //

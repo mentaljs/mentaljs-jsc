@@ -8,7 +8,8 @@
         "preserveConstEnums": true,
         "sourceMap": false,
         "outDir": "build",
-        "jsx": "react"
+        "jsx": "react",
+        "downlevelIteration": true
     },
     "include": [
         "packages/mentaljs-jsc",

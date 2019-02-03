@@ -5,6 +5,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "com.fasterxml.jackson.jr:jackson-jr-stree:2.9.0"
     implementation "com.fasterxml.jackson.jr:jackson-jr-objects:2.9.0"
+    api "org.json:json:20180813"
 }
 buildscript {
     repositories {

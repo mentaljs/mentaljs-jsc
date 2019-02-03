@@ -94,6 +94,7 @@ class ModuleProcessor : AbstractProcessor() {
             val rname = name + "_Serializer"
             val fileBuilder = FileSpec.builder(pack, "$rname")
                     .addStaticImport(pack, name)
+                    .addStaticImport("com.openland.react", "*")
                     .addStaticImport("com.fasterxml.jackson.jr.stree", "*")
 
             val typeSpecBuilder = TypeSpec.classBuilder(rname)
@@ -112,6 +113,8 @@ class ModuleProcessor : AbstractProcessor() {
                         body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsNumber).value.toInt();\n"
                     } else if (e.asType().toString() == "java.lang.Float" || e.asType().toString() == "float") {
                         body += "    res." + e.simpleName.toString() + " = (_" + e.simpleName + " as JrsNumber).value.toFloat();\n"
+                    } else if (e.asType().toString() == "com.openland.react.ViewCallback") {
+                        body += "    res." + e.simpleName.toString() + " = ViewCallback((_" + e.simpleName + " as JrsString).value, handler);\n"
                     } else {
                         throw Error("Unsupported type: " + e.asType())
                     }
@@ -124,6 +127,7 @@ class ModuleProcessor : AbstractProcessor() {
             typeSpecBuilder.addFunction(FunSpec.builder("parse")
                     .addModifiers(KModifier.OVERRIDE)
                     .addParameter("source", TreeNode::class)
+                    .addParameter("handler", CallbackHandler::class)
                     .returns(Any::class)
                     .addCode(body)
                     .build())
