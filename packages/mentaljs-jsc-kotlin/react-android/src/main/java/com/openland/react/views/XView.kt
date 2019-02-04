@@ -159,8 +159,17 @@ object XViewSpec {
         if (spec.animate == "opacity" || spec.animate == "all") {
             res.animate(AnimatedProperties.ALPHA)
         }
-        if (spec.animate == "opacity" || spec.animate == "all") {
+        if (spec.animate == "x" || spec.animate == "all") {
             res.animate(AnimatedProperties.X)
+        }
+        if (spec.animate == "y" || spec.animate == "all") {
+            res.animate(AnimatedProperties.Y)
+        }
+        if (spec.animate == "w" || spec.animate == "all") {
+            res.animate(AnimatedProperties.WIDTH)
+        }
+        if (spec.animate == "h" || spec.animate == "all") {
+            res.animate(AnimatedProperties.HEIGHT)
         }
         return res
     }

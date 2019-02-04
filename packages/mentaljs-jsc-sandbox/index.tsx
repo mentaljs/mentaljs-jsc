@@ -30,10 +30,10 @@ class RootView extends React.Component<{}, { color: string }> {
         return (<XView>
             <XView width={100} height={100} backgroundColor="green" />
             <XView
-                width={100}
+                width={this.state.color === 'red' ? 100 : 120}
                 height={100}
                 backgroundColor="red"
-                marginLeft={this.state.color === 'red' ? 0 : 10}
+                marginLeft={this.state.color === 'red' ? 0 : 50}
                 opacity={this.state.color === 'red' ? 1 : 0.6}
                 animate="all"
             />
