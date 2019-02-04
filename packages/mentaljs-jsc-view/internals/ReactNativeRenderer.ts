@@ -25,9 +25,11 @@ const createReconciler = (onChanged: () => void) => Reconciler({
 
     // Commit lifecycle
     prepareForCommit() {
+        // console.log('UIManager: Prepare');
         // TODO: Call callback
     },
     resetAfterCommit() {
+        // console.log('UIManager: Commit');
         onChanged();
     },
 
@@ -41,6 +43,7 @@ const createReconciler = (onChanged: () => void) => Reconciler({
     //
 
     createInstance(type: string, props: any, rootContainerInstance: any, _currentHostContext: any, workInProgress: any) {
+        // console.log('UIManager: createInstance');
         if (type !== 'asyncview' && type !== 'asynctext') {
             throw Error('Unexpected element type: ' + type);
         }
@@ -74,16 +77,20 @@ const createReconciler = (onChanged: () => void) => Reconciler({
     //
 
     appendInitialChild(parent: any, child: any) {
+        // console.log('UIManager: appendInitialChild');
         parent.children.push(child);
     },
     appendChild(parent: any, child: any) {
+        // console.log('UIManager: appendChild');
         parent.children.push(child);
     },
     removeChild(parent: any, child: any) {
+        // console.log('UIManager: removeChild');
         const index = parent.children.indexOf(child);
         parent.children.splice(index, 1);
     },
     insertBefore(parent: any, child: any, beforeChild: any) {
+        // console.log('UIManager: insertBefore');
         const index = parent.children.indexOf(child);
         if (index >= 0) {
             // Move item
@@ -97,6 +104,7 @@ const createReconciler = (onChanged: () => void) => Reconciler({
         }
     },
     appendChildToContainer(parent: any, child: any) {
+        // console.log('UIManager: appendChildToContainer');
         if (parent.children.length > 1) {
             throw Error('Root element can be only one');
         }

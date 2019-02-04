@@ -1,8 +1,9 @@
 const path = require('path');
 
 module.exports = {
-    mode: "development",
     entry: './packages/mentaljs-jsc-sandbox/index.tsx',
+    // mode: "production",
+    mode: "production",
     optimization: {
 		// We no not want to minimize our code.
 		minimize: false

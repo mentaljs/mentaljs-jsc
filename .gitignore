@@ -1,3 +1,5 @@
 **/xcuserdata
 packages/mentaljs-jsc-kotlin/.idea
 build
+packages/mentaljs-multi/.gradle
+packages/mentaljs-multi/.idea

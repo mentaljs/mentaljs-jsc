@@ -15,7 +15,7 @@ import { ViewEvents } from './ViewEvents';
 // }
 
 export function createView<T extends Object = {}>(name: string) {
-    let res = class NativeView extends React.Component<T> {
+    let res = class NativeView extends React.PureComponent<T> {
         static displayName = name;
 
         registeredCallbacks: { [key: string]: string } = {}
@@ -63,19 +63,7 @@ export function createView<T extends Object = {}>(name: string) {
         }
     }
     return res;
-    // return React.memo<T>((props) => {
-
-    //     let hasCallbacks = false
-    //     for (let k in props) {
-    //         if (typeof k === 'function') {
-    //             hasCallbacks = true;
-    //             break
-    //         }
-    //     }
-    //     React.useMemo(() => {
-
-    //     }, [hasCallbacks])
-
+    // return (props:T) => {
     //     return <asyncview asyncViewName={name} {...props} />
-    // });
+    // };
 }
