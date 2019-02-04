@@ -12,6 +12,7 @@ import com.openland.react.ui.ViewSpec
 import org.json.JSONObject
 import com.facebook.litho.animation.AnimatedProperties
 import com.facebook.litho.annotations.OnCreateTransition
+import com.facebook.litho.annotations.OnUpdateState
 
 
 class XViewFactory : NativeViewFactory<XViewProps>("XView", XViewProps::class) {
@@ -139,6 +140,7 @@ object XViewSpec {
             res.child(calculateComponent(context, c, reactContext))
         }
 
+        res.transitionKeyType(Transition.TransitionKeyType.GLOBAL)
         res.transitionKey("view:$viewKey")
 
         return res.build()
@@ -153,7 +155,7 @@ object XViewSpec {
     @OnCreateTransition
     internal fun onCreateTransition(c: ComponentContext, @Prop viewKey: String, @Prop spec: XViewProps): Transition {
         Transition.allLayout()
-        val res = Transition.create("view:$viewKey")
+        val res = Transition.create(Transition.TransitionKeyType.GLOBAL, "view:$viewKey")
         if (spec.animate == "opacity" || spec.animate == "all") {
             res.animate(AnimatedProperties.ALPHA)
         }
